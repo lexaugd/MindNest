@@ -1,48 +1,72 @@
-# Local AI Code Assistant
+# MindNest - AI Documentation System
 
-This is a local AI assistant that can answer questions about your company's codebase and documentation. It uses open-source models and runs completely locally on your machine.
+An intelligent documentation system that uses AI to understand and answer questions about your codebase.
 
 ## Features
 
-- Local processing - no data leaves your machine
-- Uses Llama 2 model for natural language understanding
-- Vector database for efficient document retrieval
-- Simple chat interface
-- Free and open-source
+- **Multi-Format Support**: Understands Java, Groovy, and text documentation
+- **Smart Document Processing**: Automatically processes and indexes your documentation
+- **Intelligent Q&A**: Answers questions about your code accurately
+- **Source Attribution**: Always shows which files the information comes from
 
 ## Setup
 
-1. Install Python 3.9+ if you haven't already
-2. Install the requirements:
-   ```bash
-   pip install -r requirements.txt
-   ```
-3. Download the Llama 2 model (instructions below)
-4. Create a `.env` file with your configuration
-5. Run the application:
-   ```bash
-   python main.py
-   ```
+1. Create a virtual environment:
+```bash
+python -m venv venv
+source venv/bin/activate  # On Unix/Mac
+# or
+venv\Scripts\activate     # On Windows
+```
 
-## Downloading the Model
+2. Install dependencies:
+```bash
+pip install -r requirements.txt
+```
 
-1. Visit [TheBloke's Llama-2-7B-GGUF](https://huggingface.co/TheBloke/Llama-2-7B-GGUF) on Hugging Face
-2. Download the `llama-2-7b.Q4_K_M.gguf` model file
-3. Place it in the `models` directory
+3. Download the Llama model:
+- Place `llama-2-7b.Q4_K_M.gguf` in the `models/` directory
+
+4. Run the application:
+```bash
+python main.py
+```
+
+## Project Structure
+
+```
+MindNest/
+├── docs/                 # Documentation and code examples
+│   ├── java/            # Java code examples
+│   ├── groovy/          # Groovy code examples
+│   └── txt/             # Text documentation
+├── models/              # AI model files
+├── static/              # Static web files
+├── main.py             # Main application
+├── requirements.txt    # Python dependencies
+└── README.md          # This file
+```
 
 ## Usage
 
-1. Start the server using `python main.py`
-2. Open your browser to `http://localhost:8000`
-3. Start chatting with your codebase!
+1. Place your documentation in the `docs/` directory
+2. Start the server: `python main.py`
+3. Ask questions about your code
+4. Get accurate, source-attributed answers
 
-## Adding Your Documentation
+## Technical Details
 
-Place your documentation files in the `docs` directory. Supported formats:
-- Markdown (.md)
-- Text (.txt)
-- Python files (.py)
-- JavaScript files (.js)
-- TypeScript files (.ts)
+- Uses Llama 2 7B (Q4_K_M quantized version)
+- Optimized for CPU usage
+- Supports context window of 2048 tokens
+- Uses HuggingFace embeddings for document processing
 
-The system will automatically index these files when started. 
+## Limitations
+
+- Best suited for codebases under 100 files
+- Response time may vary based on system resources
+- Requires restart to load new documentation
+
+## License
+
+[Your chosen license] 
