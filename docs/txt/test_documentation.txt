@@ -1,0 +1,16 @@
+Test Documentation
+
+This is a test documentation file to verify that our AI assistant can read and understand text files.
+
+Key Features:
+1. Simple text format
+2. Easy to read
+3. Contains basic documentation structure
+
+Example Usage:
+The system should be able to answer questions about:
+- Java code in the java folder
+- Groovy code in the groovy folder
+- Documentation in the txt folder
+
+This is just a test file to verify that everything is working correctly. 
