@@ -10,6 +10,7 @@ An intelligent documentation system that uses AI to understand and answer questi
 - **Source Attribution**: Always shows which files the information comes from
 - **Optimized Performance**: Efficient caching and incremental updates for faster responses
 - **Lightweight Mode**: Option to run with vector search only for better performance
+- **Model Switching**: Choose between larger (high quality) or smaller (faster) language models
 
 ## Setup
 
@@ -31,6 +32,7 @@ pip install -r requirements.txt
 3. Download the LLM model:
    - Place your LLM model file (e.g., `llama-2-7b.Q4_K_M.gguf`) in the `models/` directory
    - You can use different model sizes based on your hardware capabilities
+   - MindNest supports switching between models via the UI (see `release_notes/model_switching.md`)
 
 4. Configure the application:
    - Copy `env.example` to `.env` and adjust settings as needed
