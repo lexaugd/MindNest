@@ -11,6 +11,7 @@ An intelligent documentation system that uses AI to understand and answer questi
 - **Optimized Performance**: Efficient caching and incremental updates for faster responses
 - **Lightweight Mode**: Option to run with vector search only for better performance
 - **Model Switching**: Choose between larger (high quality) or smaller (faster) language models
+- **Convenient Launcher**: Launch the application with different configurations using the included launcher script
 
 ## Setup
 
@@ -40,8 +41,8 @@ pip install -r requirements.txt
    - **Note:** If upgrading from a previous version, see `release_notes/environment_update.md` for important configuration changes
 
 5. Run the application:
-   - Full application with LLM: `python main.py`
-   - Lightweight mode with vector search only: `python run_server.py`
+   - Using the launcher: `./mindnest_launcher.py` (see `release_notes/launcher_guide.md` for options)
+   - Manually: `python main.py` (full mode) or `python run_server.py` (lightweight mode)
 
 ### Docker Setup
 
@@ -69,6 +70,7 @@ MindNest/
 │   ├── query_cache.py   # Query caching
 │   └── query_optimization.py  # Query classification and optimization
 ├── release_notes/       # Version release notes and documentation
+├── mindnest_launcher.py # Application launcher script
 ├── main.py              # Main application with LLM
 ├── run_server.py        # Lightweight server (vector search only)
 ├── requirements.txt     # Python dependencies
