@@ -17,6 +17,10 @@ from langchain_community.document_loaders import (
 from fastapi.requests import Request
 import shutil
 
+# Import our optimized components
+from utils.incremental_vectorstore import IncrementalVectorStore
+from utils.query_cache import QueryCache
+
 # Load environment variables
 try:
     from dotenv import load_dotenv
@@ -83,101 +87,36 @@ vectorstore = None
 llm = None
 qa_chain = None
 model_name = "Wizard-Vicuna-13B-Uncensored.Q4_K_M.gguf"
+query_cache = QueryCache()  # Initialize query cache
 
+# This function retains backward compatibility but is now just a wrapper
 def load_documents():
     """Load and process all documents from the docs directory."""
-    print("Loading documents from docs directory...")
-    loaders = {
-        ".txt": (DirectoryLoader, {"glob": "**/*.txt", "loader_cls": TextLoader}),
-        ".md": (DirectoryLoader, {"glob": "**/*.md", "loader_cls": UnstructuredMarkdownLoader}),
-        ".py": (DirectoryLoader, {"glob": "**/*.py", "loader_cls": PythonLoader}),
-        ".groovy": (DirectoryLoader, {"glob": "**/*.groovy", "loader_cls": TextLoader}),
-        ".java": (DirectoryLoader, {"glob": "**/*.java", "loader_cls": TextLoader}),
-        ".js": (DirectoryLoader, {"glob": "**/*.js", "loader_cls": TextLoader}),
-        ".ts": (DirectoryLoader, {"glob": "**/*.ts", "loader_cls": TextLoader}),
-    }
-    
-    documents = []
-    for ext, (loader_class, loader_args) in loaders.items():
-        try:
-            # Create and load documents directly without trying to access file_paths first
-            loader = loader_class("docs", **loader_args)
-            try:
-                ext_docs = loader.load()
-                if ext_docs:
-                    print(f"Loaded {len(ext_docs)} {ext} files")
-                    documents.extend(ext_docs)
-                else:
-                    print(f"No {ext} files found in docs directory")
-            except Exception as e:
-                print(f"Error loading {ext} files: {e}")
-        except Exception as e:
-            print(f"Error creating loader for {ext} files: {e}")
-    
-    if not documents:
-        print("No documents found in docs directory!")
-        return []
-        
-    # Optimize chunk size based on document count
-    total_docs = len(documents)
-    print(f"Total documents loaded: {total_docs}")
-    if total_docs > 50:
-        chunk_size = 800  # Smaller chunks for large collections
-        chunk_overlap = 100
-    else:
-        chunk_size = 1000
-        chunk_overlap = 200
-    
-    print(f"Splitting documents with chunk size {chunk_size} and overlap {chunk_overlap}")
-    text_splitter = RecursiveCharacterTextSplitter(
-        chunk_size=chunk_size,
-        chunk_overlap=chunk_overlap,
-    )
-    split_docs = text_splitter.split_documents(documents)
-    print(f"Document splitting complete. Created {len(split_docs)} chunks")
-    return split_docs
+    print("Loading documents using incremental vector store implementation...")
+    inc_vectorstore = IncrementalVectorStore()
+    # Force rebuild is handled inside initialize_or_update
+    vs = inc_vectorstore.initialize_or_update(force_rebuild=False)
+    return []  # Return empty list since the vector store is already populated
 
 def initialize_vectorstore():
     """Initialize the vector store with documents."""
     global vectorstore
     try:
-        print("Initializing vector store...")
-        # Check if there's existing data
-        persist_directory = "chroma_db"
+        print("Initializing vector store using incremental implementation...")
+        # Use our optimized incremental vector store implementation
+        inc_vectorstore = IncrementalVectorStore()
         
         # Option to force rebuild the vector store
         force_rebuild = False
         
-        if force_rebuild and os.path.exists(persist_directory):
-            print("Removing existing vector store for rebuild")
-            shutil.rmtree(persist_directory)
+        # Initialize or update the vector store
+        vectorstore = inc_vectorstore.initialize_or_update(force_rebuild=force_rebuild)
         
-        if os.path.exists(persist_directory):
-            # Load existing vector store
-            print("Loading existing vector store")
-            vectorstore = Chroma(
-                persist_directory=persist_directory,
-                embedding_function=embeddings
-            )
-            print(f"Loaded existing vector store with {len(vectorstore.get()['ids'])} documents")
+        if vectorstore is not None:
+            print(f"Vector store ready with {len(vectorstore.get()['ids'])} documents")
         else:
-            # Create new vector store
-            print("Creating new vector store")
-            documents = load_documents()
-            if not documents:
-                print("No documents to add to vector store!")
-                return
-                
-            print(f"Adding {len(documents)} documents to vector store")
-            vectorstore = Chroma.from_documents(
-                documents=documents,
-                embedding=embeddings,
-                persist_directory=persist_directory
-            )
-            # Persist the vector store
-            print("Persisting vector store")
-            vectorstore.persist()
-            print("Vector store created and persisted successfully")
+            print("Failed to initialize vector store")
+            
     except Exception as e:
         print(f"Error initializing vector store: {e}")
         raise
@@ -211,58 +150,54 @@ def initialize_llm():
         return False
 
 def initialize_qa_chain():
-    """Initialize the question-answering chain."""
+    """Initialize the question-answering chain with the LLM."""
     global qa_chain, llm
     
-    if vectorstore is None:
-        initialize_vectorstore()
-    
-    if llm is None:
-        if not initialize_llm():
-            print("Cannot initialize QA chain without LLM")
+    try:
+        if llm is None:
+            # If LLM initialization failed, we can't create the QA chain
+            print("LLM not initialized. QA chain initialization skipped.")
             return False
     
-    try:
-        from langchain.chains import LLMChain
+        print("Initializing QA chain...")
+        
+        # Create QA chain with proper handling for document retrieval
+        from langchain.chains import RetrievalQA
         from langchain.prompts import PromptTemplate
         
-        print("Initializing QA chain")
-        # Create a custom prompt template with Vicuna format
-        template = """A chat between a curious user and an artificial intelligence assistant. The assistant gives helpful, detailed, and polite answers to the user's questions.
-
-The assistant is presented with code or documentation from different files. The assistant's task is to:
-1. Only answer based on the actual content shown in the context
-2. Be concise and direct - no explanations unless asked
-3. If the content doesn't contain the information needed, say "I don't have enough information to answer that question"
-4. Answer only the specific question asked, do not include additional questions or answers
-5. If you see multiple content blocks separated by "---", treat them as separate files
-6. When referring to code or content, specify which file/block you're referring to if there are multiple
-7. Do not make assumptions about content that isn't shown
-8. Do not generate example code unless specifically asked
-9. Keep responses focused and to the point
-10. Always specify which file you're referring to in your answer
-
-Here is the content:
-{context}
-
-USER: {question}
-ASSISTANT:"""
+        # Define prompt template for retrieval QA
+        template = """
+        Use the following pieces of context to answer the question at the end.
+        If you don't know the answer, just say that you don't know, don't try to make up an answer.
         
-        prompt = PromptTemplate(
-            template=template,
-            input_variables=["context", "question"]
-        )
+        Context:
+        {context}
         
-        # Create the chain
-        qa_chain = LLMChain(
+        Question: {question}
+        
+        Answer:
+        """
+        
+        QA_CHAIN_PROMPT = PromptTemplate.from_template(template)
+        
+        # Create retriever from vectorstore
+        retriever = vectorstore.as_retriever()
+        
+        # Create QA chain
+        qa_chain = RetrievalQA.from_chain_type(
             llm=llm,
-            prompt=prompt,
-            verbose=True
+            chain_type="stuff",
+            retriever=retriever,
+            return_source_documents=True,
+            chain_type_kwargs={"prompt": QA_CHAIN_PROMPT}
         )
+        
         print("QA chain initialized successfully")
         return True
     except Exception as e:
         print(f"Error initializing QA chain: {e}")
+        import traceback
+        traceback.print_exc()
         return False
 
 class Question(BaseModel):
@@ -274,138 +209,222 @@ class Answer(BaseModel):
 
 @app.post("/ask", response_model=Answer)
 async def ask_question(question: Question):
-    """Handle incoming questions and return answers."""
-    global qa_chain, vectorstore, llm
+    """
+    Process a question using retrieval-augmented generation.
     
-    # Make sure vectorstore is initialized
-    if vectorstore is None:
-        initialize_vectorstore()
+    Args:
+        question: The question to process
         
-    # If vectorstore still None, return error
-    if vectorstore is None:
-        raise HTTPException(status_code=500, detail="Vector store not available")
+    Returns:
+        Answer: The generated answer with source documents
+    """
+    if not qa_chain:
+        raise HTTPException(status_code=503, detail="QA chain not initialized. Service unavailable.")
+    
+    if not vectorstore:
+        raise HTTPException(status_code=503, detail="Vector store not initialized. Service unavailable.")
+        
+    query = question.text.strip()
+    if not query:
+        raise HTTPException(status_code=400, detail="Question cannot be empty.")
+        
+    print(f"Received question: {query}")
     
     try:
-        print(f"Processing question: {question.text}")
+        # Check if this is a simple query to the documents (no need for LLM)
+        if query.lower().startswith("find ") or query.lower().startswith("search "):
+            print("Processing as a document search query")
+            
+            # Extract the actual search query
+            search_query = query[5:].strip() if query.lower().startswith("find ") else query[7:].strip()
+            
+            # Try to get cached results first
+            cached_results = query_cache.get(search_query, k=4)
+            
+            if cached_results:
+                print("Found in query cache")
+                # Format the result
+                sources = []
+                
+                for result in cached_results:
+                    source = result.get("metadata", {}).get("source", "Unknown")
+                    if source not in sources:
+                        sources.append(source)
+                    
+                return Answer(
+                    text=f"Found {len(cached_results)} relevant documents for: '{search_query}'",
+                    sources=sources
+                )
+            
+            # If not in cache, perform vector search
+            docs = vectorstore.similarity_search(search_query, k=4)
+            
+            # Cache the results for future searches
+            cacheable_results = []
+            for doc in docs:
+                cacheable_results.append({
+                    "content": doc.page_content,
+                    "metadata": doc.metadata
+                })
+                
+            if cacheable_results:
+                query_cache.set(search_query, cacheable_results, k=4)
+            
+            # Format the result
+            sources = []
+            for doc in docs:
+                source = doc.metadata.get("source", "Unknown")
+                if source not in sources:
+                    sources.append(source)
+                
+            return Answer(
+                text=f"Found {len(docs)} relevant documents for: '{search_query}'",
+                sources=sources
+            )
+            
+        # Process as a regular RAG query
+        print("Processing as RAG query")
         
-        # Get relevant documents from vector store
-        k = 2  # Default number of documents to retrieve
-        collection_size = len(vectorstore.get()['ids'])
-        print(f"Collection size: {collection_size} documents")
-        if collection_size > 50:
-            k = 1  # Retrieve fewer documents for large collections
+        # Try to get cached results for document retrieval
+        cached_docs = query_cache.get(f"docs:{query}", k=4)
         
-        # Get relevant documents
-        print(f"Performing similarity search with k={k}")
-        docs = vectorstore.similarity_search(question.text, k=k)
-        print(f"Found {len(docs)} relevant documents")
+        if cached_docs:
+            print("Using cached document retrieval results")
+            docs = []
+            for doc_dict in cached_docs:
+                from langchain.docstore.document import Document
+                doc = Document(
+                    page_content=doc_dict.get("content", ""),
+                    metadata=doc_dict.get("metadata", {})
+                )
+                docs.append(doc)
+        else:
+            # Get relevant documents from the vector store
+            docs = vectorstore.similarity_search(query, k=4)
+            
+            # Cache the document retrieval results
+            cacheable_docs = []
+            for doc in docs:
+                cacheable_docs.append({
+                    "content": doc.page_content,
+                    "metadata": doc.metadata
+                })
+                
+            if cacheable_docs:
+                query_cache.set(f"docs:{query}", cacheable_docs, k=4)
         
-        # Deduplicate content and ensure proper formatting
-        seen_content = set()
-        unique_docs = []
+        sources = []
         for doc in docs:
-            content = doc.page_content.strip()
-            if content not in seen_content:
-                seen_content.add(content)
-                # Add file type and path indicator
-                file_path = doc.metadata.get("source", "Unknown")
-                file_type = file_path.split(".")[-1] if "." in file_path else "txt"
-                content = f"File: {file_path}\nType: {file_type}\n{content}"
-                unique_docs.append(doc)
+            source = doc.metadata.get("source", "Unknown")
+            if source not in sources:
+                sources.append(source)
+                
+        print(f"Found {len(docs)} relevant documents")
+                
+        # Generate answer using the retrieved documents and question
+        result = qa_chain.invoke({
+            "question": query,
+            "input_documents": docs,
+        })
         
-        print(f"After deduplication: {len(unique_docs)} unique documents")
-        sources = [doc.metadata.get("source", "Unknown") for doc in unique_docs]
-        
-        # If LLM is not initialized, just return the sources without generating answer
-        if llm is None:
-            print("LLM not initialized, returning sources only")
-            answer = "LLM not available. Here are the relevant documents: " + ", ".join(sources)
-            return Answer(text=answer, sources=sources)
-        
-        # Make sure QA chain is initialized
-        if qa_chain is None:
-            if not initialize_qa_chain():
-                raise HTTPException(status_code=500, detail="QA chain initialization failed")
-        
-        # Join unique documents with clear separation
-        context = "\n\n---\n\n".join([doc.page_content for doc in unique_docs])
-        
-        # Get answer from LLM
-        print("Generating answer from LLM")
-        try:
-            # Try the new method first
-            result = qa_chain.invoke({
-                "context": context,
-                "question": question.text
-            })
-        except (AttributeError, TypeError):
-            # Fall back to the old method if invoke doesn't work
-            result = qa_chain({
-                "context": context,
-                "question": question.text
-            })
-        
-        # Extract and validate answer
-        answer = result.get("text", "").strip()
-        
-        # Basic validation of response
-        if "I don't have enough information" not in answer:
-            # Check if response is too long (more than 500 characters)
-            if len(answer) > 500:
-                answer = answer[:500] + "... (response truncated)"
+        answer_text = result.get("answer", result.get("result", "No answer generated."))
             
-            # Check if response contains multiple questions
-            if "Question:" in answer:
-                answer = answer.split("Question:")[0].strip()
-            
-            # Ensure file reference is included if multiple files are present
-            if len(unique_docs) > 1 and "File:" not in answer:
-                answer = f"Based on {sources[0]}: {answer}"
-        
-        # Print the generated answer for debugging
-        print(f"Generated answer: {answer[:100]}...")
-        
-        # Create response
-        response = Answer(text=answer, sources=sources)
-        return response
-        
+        return Answer(
+            text=answer_text,
+            sources=sources
+        )
+                
     except Exception as e:
         print(f"Error processing question: {e}")
-        raise HTTPException(status_code=500, detail=str(e))
+        import traceback
+        traceback.print_exc()
+        raise HTTPException(status_code=500, detail=f"Error processing question: {str(e)}")
 
 @app.get("/documents")
 async def list_documents():
     """List all documents in the vector store."""
-    if vectorstore is None:
-        initialize_vectorstore()
-        
+    if not vectorstore:
+        raise HTTPException(status_code=503, detail="Vector store not initialized")
+    
     try:
-        if vectorstore is None:
-            return {"documents": []}
-            
-        collection_data = vectorstore.get()
-        # Get metadata for all documents
-        docs = []
-        for i, doc_id in enumerate(collection_data['ids']):
-            if i < len(collection_data['metadatas']):
-                metadata = collection_data['metadatas'][i]
-                source = metadata.get('source', 'Unknown')
-                docs.append({"id": doc_id, "source": source})
+        # Get all documents from the vectorstore
+        all_docs = vectorstore.get()
+        total_count = len(all_docs["ids"])
         
-        # Group by source file
-        doc_counts = {}
-        for doc in docs:
-            source = doc['source']
-            if source in doc_counts:
-                doc_counts[source] += 1
-            else:
-                doc_counts[source] = 1
-                
-        result = [{"filename": src, "chunk_count": count} for src, count in doc_counts.items()]
-        return {"documents": result, "total_chunks": len(docs)}
+        # Extract unique sources for reporting
+        sources = []
+        if "metadatas" in all_docs and all_docs["metadatas"]:
+            for metadata in all_docs["metadatas"]:
+                if metadata and "source" in metadata:
+                    source = metadata["source"]
+                    if source not in sources:
+                        sources.append(source)
+        
+        return {
+            "total_documents": total_count,
+            "sources": sources
+        }
     except Exception as e:
         print(f"Error listing documents: {e}")
         raise HTTPException(status_code=500, detail=str(e))
+
+@app.get("/stats")
+async def get_stats():
+    """Get statistics about the document processing system."""
+    try:
+        # Create a document tracker to get document statistics
+        from utils.document_tracker import DocumentTracker
+        tracker = DocumentTracker()
+        
+        # Get cache statistics
+        cache_stats = query_cache.get_stats()
+        
+        # Get document statistics
+        doc_count = tracker.get_document_count()
+        extensions = tracker.get_file_extensions()
+        last_update = tracker.get_last_update()
+        
+        # Get vector store statistics
+        vs_stats = {}
+        if vectorstore:
+            vs_data = vectorstore.get()
+            vs_stats = {
+                "total_chunks": len(vs_data["ids"]),
+                "embedding_dim": len(vs_data["embeddings"][0]) if vs_data["embeddings"] else 0,
+            }
+        
+        return {
+            "documents": {
+                "count": doc_count,
+                "extensions": extensions,
+                "last_update": last_update
+            },
+            "cache": {
+                "memory_hits": cache_stats["memory_hits"],
+                "disk_hits": cache_stats["disk_hits"],
+                "misses": cache_stats["misses"],
+                "total_queries": cache_stats["total_queries"],
+                "hit_rate_percent": cache_stats["hit_rate_percent"],
+                "memory_size": cache_stats["memory_cache_size"],
+                "disk_size": cache_stats["disk_cache_size"]
+            },
+            "vectorstore": vs_stats
+        }
+    except Exception as e:
+        print(f"Error getting statistics: {e}")
+        return {
+            "error": str(e),
+            "status": "Could not retrieve complete statistics"
+        }
+
+@app.post("/clear-cache")
+async def clear_cache():
+    """Clear the query cache."""
+    try:
+        query_cache.clear()
+        return {"status": "success", "message": "Cache cleared successfully"}
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=f"Error clearing cache: {str(e)}")
 
 @app.on_event("startup")
 async def startup_event():

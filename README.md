@@ -67,6 +67,8 @@ MindNest/
 - Response time may vary based on system resources
 - Requires restart to load new documentation
 
+![image](https://github.com/user-attachments/assets/bb04756e-5cdf-4486-a5b3-2ff9ae7305ff)
+![Uploading image.png…]()
+
 ## License
 
-[Your chosen license] 
