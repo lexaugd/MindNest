@@ -12,6 +12,8 @@ import webbrowser
 import time
 import signal
 import platform
+import importlib.util
+import pkg_resources
 from pathlib import Path
 
 # Configuration
@@ -86,6 +88,99 @@ def update_env_file(use_small_model=None, context_window=None, query_mode=None):
             print(f"  - {key}: {value}")
     
     return True
+
+def check_dependencies():
+    """Check if all required dependencies are installed"""
+    req_file = Path("requirements.txt")
+    if not req_file.exists():
+        print("⚠️ requirements.txt file not found")
+        return False
+    
+    print("🔍 Checking dependencies...")
+    missing_packages = []
+    outdated_packages = []
+    
+    # Read requirements
+    with open(req_file, 'r') as f:
+        lines = [line.strip() for line in f.readlines() 
+                if line.strip() and not line.startswith('#')]
+    
+    # Check each requirement
+    for line in lines:
+        # Parse requirement line
+        if "==" in line:
+            package, version = line.split("==")
+        elif ">=" in line:
+            package, version = line.split(">=")
+        else:
+            package, version = line, None
+        
+        # Check if package is installed
+        spec = importlib.util.find_spec(package.replace("-", "_"))
+        if spec is None:
+            missing_packages.append(line)
+            continue
+        
+        # Check version if specified
+        if version:
+            try:
+                installed_version = pkg_resources.get_distribution(package).version
+                if installed_version != version and "==" in line:
+                    outdated_packages.append((package, installed_version, version))
+            except pkg_resources.DistributionNotFound:
+                missing_packages.append(line)
+    
+    if missing_packages:
+        print(f"⚠️ Missing {len(missing_packages)} required packages:")
+        for pkg in missing_packages[:5]:
+            print(f"  - {pkg}")
+        if len(missing_packages) > 5:
+            print(f"    ...and {len(missing_packages) - 5} more")
+        return False
+    
+    if outdated_packages:
+        print(f"⚠️ Found {len(outdated_packages)} outdated packages:")
+        for pkg, current, required in outdated_packages[:5]:
+            print(f"  - {pkg}: {current} (required: {required})")
+        if len(outdated_packages) > 5:
+            print(f"    ...and {len(outdated_packages) - 5} more")
+        return False
+    
+    print("✓ All dependencies are installed and up to date")
+    return True
+
+def install_dependencies(auto_accept=False):
+    """Install missing dependencies"""
+    req_file = Path("requirements.txt")
+    if not req_file.exists():
+        print("⚠️ requirements.txt file not found")
+        return False
+    
+    if not auto_accept:
+        response = input("Would you like to install/update the required dependencies? (y/n): ")
+        if response.lower() not in ["y", "yes"]:
+            return False
+    
+    print("📦 Installing dependencies...")
+    
+    # Determine the Python executable to use
+    python_exe = activate_virtual_env()
+    
+    # Install dependencies
+    try:
+        subprocess.run(
+            [python_exe, "-m", "pip", "install", "-r", "requirements.txt"],
+            check=True,
+            stdout=subprocess.PIPE,
+            stderr=subprocess.PIPE,
+            universal_newlines=True
+        )
+        print("✓ Dependencies installed successfully")
+        return True
+    except subprocess.CalledProcessError as e:
+        print(f"❌ Error installing dependencies: {e}")
+        print(f"Error details: {e.stderr}")
+        return False
 
 def start_server(mode="full", model="default", open_browser=True):
     """Start the MindNest server"""
@@ -175,7 +270,7 @@ def start_server(mode="full", model="default", open_browser=True):
 
 def print_logo():
     """Print a simple ASCII logo"""
-    logo = """
+    logo = r"""
  __  __ _           _ _   _           _   
 |  \/  (_)_ __   __| | \ | | ___  ___| |_ 
 | |\/| | | '_ \ / _` |  \| |/ _ \/ __| __|
@@ -188,6 +283,7 @@ AI-Powered Documentation System - v1.0
 
 def check_environment():
     """Check if all requirements are met"""
+    all_ok = True
     
     # Check if virtual environment exists
     venv_path = Path("venv")
@@ -200,7 +296,7 @@ def check_environment():
         else:
             print("   source venv/bin/activate")
         print("   pip install -r requirements.txt")
-        return False
+        all_ok = False
     
     # Check if model files exist
     models_path = Path("models")
@@ -208,7 +304,7 @@ def check_environment():
     if not model_files:
         print("⚠️ No model files found in models/ directory")
         print("ℹ️ Please download the model files as described in README.md")
-        return False
+        all_ok = False
     
     # Check for required models
     default_model = models_path / "Wizard-Vicuna-13B-Uncensored.Q4_K_M.gguf"
@@ -225,6 +321,7 @@ def check_environment():
         print("ℹ️ The following model files are available:")
         for model in model_files:
             print(f"   - {model.name}")
+        all_ok = False
     
     # Check for .env file
     env_path = Path(".env")
@@ -235,9 +332,13 @@ def check_environment():
             print("ℹ️ A new .env file will be created from the template when launching")
         else:
             print("❌ Neither .env nor env.example files found")
-            return False
+            all_ok = False
     
-    return True
+    # Check dependencies
+    if not check_dependencies():
+        all_ok = False
+    
+    return all_ok
 
 def main():
     """Main launcher function"""
@@ -252,8 +353,17 @@ def main():
                         help="Don't open browser automatically")
     parser.add_argument("--check", action="store_true",
                         help="Check environment and exit")
+    parser.add_argument("--install-deps", action="store_true",
+                        help="Install or update dependencies")
+    parser.add_argument("--auto-install", action="store_true",
+                        help="Automatically install dependencies without prompting")
     
     args = parser.parse_args()
+    
+    # If just installing dependencies
+    if args.install_deps:
+        install_dependencies(auto_accept=args.auto_install)
+        return 0
     
     # If check only, just run the check and exit
     if args.check:
@@ -266,9 +376,30 @@ def main():
     # Check environment before starting
     if not check_environment():
         print("\n⚠️ Warning: Environment check failed")
-        response = input("Continue anyway? (y/n): ")
-        if response.lower() not in ["y", "yes"]:
-            return 1
+        
+        # Check if we should auto-install dependencies
+        if args.auto_install:
+            print("🔄 Attempting to fix issues automatically...")
+            install_dependencies(auto_accept=True)
+            
+            # Check again after installation
+            if not check_environment():
+                print("\n❌ Still issues with environment after auto-fix")
+                response = input("Continue anyway? (y/n): ")
+                if response.lower() not in ["y", "yes"]:
+                    return 1
+        else:
+            # Offer to install dependencies if they're missing
+            missing_deps = not check_dependencies()
+            if missing_deps:
+                if install_dependencies():
+                    print("🔄 Checking environment again after dependency installation...")
+                    check_environment()
+            
+            # Ask if user wants to continue despite environment issues
+            response = input("Continue anyway? (y/n): ")
+            if response.lower() not in ["y", "yes"]:
+                return 1
     
     # Start the server
     print("\n" + "=" * 60)

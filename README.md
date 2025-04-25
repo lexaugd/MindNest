@@ -12,6 +12,7 @@ An intelligent documentation system that uses AI to understand and answer questi
 - **Lightweight Mode**: Option to run with vector search only for better performance
 - **Model Switching**: Choose between larger (high quality) or smaller (faster) language models
 - **Convenient Launcher**: Launch the application with different configurations using the included launcher script
+- **Automatic Dependency Management**: Detects and installs missing dependencies automatically
 
 ## Setup
 
@@ -28,6 +29,8 @@ venv\Scripts\activate     # On Windows
 2. Install dependencies:
 ```bash
 pip install -r requirements.txt
+# Or use the launcher's auto-install feature:
+python mindnest_launcher.py --install-deps
 ```
 
 3. Download the LLM model:
@@ -42,6 +45,7 @@ pip install -r requirements.txt
 
 5. Run the application:
    - Using the launcher: `./mindnest_launcher.py` (see `release_notes/launcher_guide.md` for options)
+   - Using the launcher with auto-dependency installation: `./mindnest_launcher.py --auto-install`
    - Manually: `python main.py` (full mode) or `python run_server.py` (lightweight mode)
 
 ### Docker Setup
