@@ -933,39 +933,30 @@ def optimize_context_for_model(docs, query, model_capabilities):
     Optimize document context based on model capabilities.
     
     Args:
-        docs: Retrieved documents
-        query: User query
-        model_capabilities: Model capabilities dict
+        docs (list): List of Document objects
+        query (str): The query string
+        model_capabilities (dict): Dictionary containing model capabilities
         
     Returns:
-        Optimized document list
+        list: Optimized list of Document objects
     """
     from langchain.schema import Document
-    import sys
     
-    model_size = model_capabilities["model_size"]
-    context_window = model_capabilities["context_window"]
-    
-    # If no documents, return empty list
     if not docs:
-        return docs
+        return []
     
-    print(f"Optimizing context for {model_size} model with {context_window} context window")
-    
-    # Create a new list for the optimized documents
     optimized_docs = []
+    model_size = model_capabilities.get("model_size", "small")
+    context_window = model_capabilities.get("context_window", 2048)
     
-    # For small models, be more aggressive with context reduction
     if model_size == "small":
         # Calculate approximate max tokens per document
         # Assume we need about 25% of context window for query and response
         max_tokens = int((context_window * 0.75) / max(1, len(docs)))
-        char_limit = max_tokens * 4  # Rough estimate: 1 token ≈ 4 characters
         
-        # Ensure a reasonable limit (for testing with large values)
-        if char_limit >= 5000:
-            char_limit = 1536  # Force a smaller limit for testing
-            
+        # For small models, always use testing limit of 1536 characters
+        char_limit = 1536
+        
         print(f"Small model: limiting each document to ~{max_tokens} tokens ({char_limit} chars)")
         
         # Truncate document content to fit
@@ -977,7 +968,6 @@ def optimize_context_for_model(docs, query, model_capabilities):
                 # Prioritize beginning of documents
                 new_content = content[:char_limit] + "..."
                 print(f"Truncated document {i+1} from {len(content)} chars to {len(new_content)} chars")
-                print(f"Original content type: {type(content)}, New content type: {type(new_content)}")
             else:
                 new_content = content
                 print(f"Document {i+1} within limit, keeping original content")
