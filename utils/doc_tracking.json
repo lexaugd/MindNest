@@ -1,0 +1,25 @@
+{
+  "last_update": "2025-04-24T20:45:14.533742",
+  "files": {
+    "docs/txt/test_documentation.txt": {
+      "hash": "e438f7c5dee6365eb196b900167c1b05",
+      "last_modified": 1745288238.7543805,
+      "last_indexed": "2025-04-24T20:41:02.107799"
+    },
+    "docs/java/TestClass.java": {
+      "hash": "cbcfd23d5b4a316f06f954b6afca516b",
+      "last_modified": 1745288235.302498,
+      "last_indexed": "2025-04-24T20:41:02.107873"
+    },
+    "docs/md/03_Object_Wrappers.md": {
+      "hash": "920b301e09fd0d9c00454740e338a239",
+      "last_modified": 1745540901.546567,
+      "last_indexed": "2025-04-24T20:41:02.107967"
+    },
+    "docs/groovy/TestGroovy.groovy": {
+      "hash": "662b7b8ca336839c7a36a7331b7c49e7",
+      "last_modified": 1745288232.3675745,
+      "last_indexed": "2025-04-24T20:41:02.108019"
+    }
+  }
+}

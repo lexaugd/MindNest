@@ -1,0 +1,50 @@
+{
+  "metadata": {
+    "created": "2025-04-24T20:43:24.570814",
+    "last_cleanup": "2025-04-24T20:45:26.985937"
+  },
+  "queries": {
+    "what is a document store?:3": {
+      "result": [
+        {
+          "content": "Document stores are NoSQL databases...",
+          "metadata": {
+            "source": "docs/test.txt"
+          }
+        },
+        {
+          "content": "A document-oriented database...",
+          "metadata": {
+            "source": "docs/sample.md"
+          }
+        }
+      ],
+      "timestamp": 1745541804.570827,
+      "last_accessed": 1745541804.570827
+    },
+    "what is the object wrapper system:3": {
+      "result": [
+        {
+          "content": "Object Wrapper System\n\nOverview\n\nThe Object Wrapper System provides a consistent interface for accessing different types of objects throughout the application. It allows for a uniform approach to data access regardless of the underlying data structure, simplifying business logic and making code more maintainable.\n\nArchitecture Diagram\n\n\u250c\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2510 \u250c\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2510 \u2502 \u2502 \u2502 \u2502 \u2502 Client Code \u2502\u2500\u2500\u2500\u2500\u25b6\u2502 ObjectWrapper \u2502 \u2502 \u2502 \u2502 Interface \u2502 \u2514\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2518 \u2514\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u252c\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2518 \u2502 \u25bc \u250c\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2510 \u2502 \u2502 \u2502 WrapperFactory \u2502 \u2502 \u2502 \u2514\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u252c\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2518 \u2502 \u250c\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u252c\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u253c\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u252c\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2510 \u2502 \u2502 \u2502 \u2502 \u2502 \u25bc \u25bc \u25bc \u25bc \u25bc \u250c\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2510 \u250c\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2510 \u250c\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2510 \u250c\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2510 \u250c\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2510 \u2502 \u2502 \u2502 \u2502 \u2502 \u2502 \u2502 \u2502 \u2502 \u2502 \u2502 MapWrapper \u2502 \u2502ListWrapper\u2502 \u2502Infonode \u2502 \u2502Property \u2502 \u2502 Other \u2502 \u2502 \u2502 \u2502 \u2502 \u2502Wrapper \u2502 \u2502Wrapper \u2502 \u2502 Wrappers \u2502 \u2514\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2518 \u2514\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2518 \u2514\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2518 \u2514\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2518 \u2514\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2518\n\nCore Wrapper Types\n\n1. ObjectWrapper",
+          "metadata": {
+            "source": "docs/md/03_Object_Wrappers.md"
+          }
+        },
+        {
+          "content": "Core Wrapper Types\n\n1. ObjectWrapper\n\nThe base wrapper that provides common functionality for all wrapped objects:\n\n```java public interface ObjectWrapper { // Presence check boolean isPresent();\n\n// Get underlying object Object unwrap();\n\n// Property access Set\n\n// Type conversion String asString(); Integer asInteger(); BigDecimal asDecimal(); Boolean asBoolean(); Date asDate(); ListWrapper asList(); MapWrapper asMap();\n\n// Default values String asString(String defaultValue); Integer asInteger(Integer defaultValue); // ... } ```\n\n2. InfonodeWrapper\n\nWraps objects from the CD (Customer Data) system:\n\n```java class InfonodeWrapper implements ObjectWrapper { private Infonode node;\n\nInfonodeWrapper(Infonode node) { this.node = node; }\n\nboolean isPresent() { return node != null; }\n\nObject unwrap() { return node; }",
+          "metadata": {
+            "source": "docs/md/03_Object_Wrappers.md"
+          }
+        },
+        {
+          "content": "Integer asInteger() { return null; }\n\n// ... } ```\n\nWrapperFactory\n\nThe WrapperFactory is responsible for creating the appropriate wrapper based on the type of object:\n\njava public class WrapperFactory { public static ObjectWrapper wrap(Object object) { if (object == null) { return new Empty(); } else if (object instanceof Infonode) { return new InfonodeWrapper((Infonode) object); } else if (object instanceof Map) { return new MapWrapper((Map<String, Object>) object); } else if (object instanceof List) { return new ListWrapper((List<?>) object); } else if (object instanceof String || object instanceof Number || object instanceof Boolean) { return new Constant(object); } else { // For regular Java beans or other objects return new BeanWrapper(object); } } }\n\nSpecial Purpose Wrappers\n\n1. ExtensionWrapper (CD System)\n\nProvides access to CD system extensions:",
+          "metadata": {
+            "source": "docs/md/03_Object_Wrappers.md"
+          }
+        }
+      ],
+      "timestamp": 1745541915.4636118,
+      "last_accessed": 1745541926.986295
+    }
+  }
+}
