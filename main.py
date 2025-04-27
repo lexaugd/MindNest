@@ -546,6 +546,13 @@ async def ask(request: Request):
         
         # For small models, use model-specific QA chain
         if model_capabilities["model_size"] == "small":
+            # Check if LLM is initialized
+            if llm is None:
+                # Fall back to a simple response if LLM is not initialized
+                print("LLM not initialized, providing fallback response")
+                fallback_response = "I'm unable to process your question at the moment because the language model is still initializing. Please try again in a few moments, or try a different type of query that doesn't require the language model."
+                return {"text": fallback_response, "sources": [doc.metadata["source"] for doc in docs[:3] if hasattr(doc, 'metadata')]}
+                
             # Create custom chain with model-specific prompt
             from langchain.chains.question_answering import load_qa_chain
             custom_chain = load_qa_chain(llm, chain_type="stuff", prompt=model_prompts["document"])
@@ -556,10 +563,16 @@ async def ask(request: Request):
             })
         else:
             # Use pre-initialized QA chain for large models
-            answer = qa_chain.invoke({
-                "input_documents": docs,
-                "query": query
-            })
+            if qa_chain is None or llm is None:
+                # Fall back to a simple response if QA chain or LLM is not initialized
+                print("QA chain or LLM not initialized, providing fallback response")
+                fallback_response = "I'm unable to process your question at the moment because the language model is still initializing. Please try again in a few moments, or try a different type of query that doesn't require the language model."
+                return {"text": fallback_response, "sources": [doc.metadata["source"] for doc in docs[:3] if hasattr(doc, 'metadata')]}
+            else:
+                answer = qa_chain.invoke({
+                    "input_documents": docs,
+                    "query": query
+                })
         
         # Apply model-specific formatting and quality control
         formatted_response = format_response(answer["output_text"], model_capabilities)
