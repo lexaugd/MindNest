@@ -36,6 +36,8 @@ env/
 chroma_db/
 models/
 .env
+utils/doc_tracking.json
+utils/query_cache.json
 
 # Logs
 *.log 
