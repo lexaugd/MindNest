@@ -1,0 +1,11 @@
+{
+  "content": "## Case Study: Retail Industry EDI Modernization\n\nA major retailer modernized their EDI infrastructure with these components:\n\n1. API gateway for partner onboarding\n2. Microservices for EDI document processing\n3. Cloud-based infrastructure for scalability\n4. Real-time inventory updates via event streams\n5. Machine learning for anomaly detection\n\nResults:\n- 60% reduction in onboarding time for new partners\n- 40% cost reduction in EDI operations\n- 99.9% uptime compared to 98% previously\n- Near real-time visibility into supply chain\n\n## Best Practices for EDI Modernization",
+  "metadata": {
+    "source": "docs/edi/edi_integration_patterns.md",
+    "relative_path": "docs/edi/edi_integration_patterns.md",
+    "filename": "edi_integration_patterns.md",
+    "filetype": "md",
+    "chunk_index": 4,
+    "total_chunks": 6
+  }
+}

@@ -1,0 +1,11 @@
+{
+  "content": "### 1. ExtensionWrapper (CD System)\n\nProvides access to CD system extensions:\n\n```java\nclass ExtensionWrapper implements ObjectWrapper {\n  private Infonode node;\n  private Attribute attribute;\n  private ExtensionUtil extensionUtil;\n  private Integer extensionId;\n  private String extensionName;\n  \n  ExtensionWrapper(Infonode node, Attribute attribute, ExtensionUtil extensionUtil) {\n    this.node = node;\n    this.attribute = attribute;\n    this.extensionUtil = extensionUtil;\n    this.extensionId = extensionUtil.getExtensionId(node);\n    this.extensionName = CommitOrder.getDetailExtensionMap().get(attribute);\n  }\n  \n  Object unwrap() {\n    if (!isPresent()) return null;\n    return extensionUtil.getExtensionValue(extensionId, extensionName);\n  }\n  \n  // Set an extension value\n  void setValue(Object value) {\n    if (isPresent()) {\n      extensionUtil.setExtensionValue(extensionId, extensionName, value);\n    }\n  }\n  \n  // Other implementation methods\n  // ...\n}\n```",
+  "metadata": {
+    "source": "docs/md/03_Object_Wrappers.md",
+    "relative_path": "docs/md/03_Object_Wrappers.md",
+    "filename": "03_Object_Wrappers.md",
+    "filetype": "md",
+    "chunk_index": 10,
+    "total_chunks": 24
+  }
+}

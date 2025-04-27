@@ -1,0 +1,11 @@
+{
+  "content": "### Common Challenges\n\n- **Data Mapping**: Correctly mapping internal data to EDI fields\n- **Required Fields**: Ensuring all required fields have valid values\n- **Code Values**: Using proper code values as specified by the standard\n- **Testing**: Thorough testing with trading partners\n- **Compliance**: Meeting trading partner-specific requirements\n\n## Best Practices\n\n1. **Document Specifications**: Create detailed mapping specifications for each trading partner\n2. **Validation Rules**: Implement robust validation rules to catch errors early\n3. **Testing**: Conduct thorough testing with simulated and real data\n4. **Monitoring**: Develop processes to monitor EDI transactions for exceptions\n5. **Version Control**: Maintain version control for mapping specifications\n6. **Error Handling**: Create clear procedures for error resolution\n\n## Related Documents",
+  "metadata": {
+    "source": "docs/edi/edi_850_guide.md",
+    "relative_path": "docs/edi/edi_850_guide.md",
+    "filename": "edi_850_guide.md",
+    "filetype": "md",
+    "chunk_index": 4,
+    "total_chunks": 6
+  }
+}

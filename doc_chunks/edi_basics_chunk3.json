@@ -1,0 +1,11 @@
+{
+  "content": "Example of X12 850 Purchase Order (simplified):\n\n```\nISA*00*          *00*          *ZZ*SENDER         *ZZ*RECEIVER       *190101*1200*U*00401*000000001*0*T*>\nGS*PO*SENDER*RECEIVER*20190101*1200*1*X*004010\nST*850*0001\nBEG*00*SA*123456**20190101\nN1*BY*Buying Company\nN1*ST*Shipping Address\nPO1*1*10*EA*9.99**PN*ITEM123\nCTT*1\nSE*7*0001\nGE*1*1\nIEA*1*000000001\n```\n\n## Implementation Considerations\n\n- **Trading Partner Agreements**: Document the EDI requirements between partners\n- **EDI Translation Software**: Converts internal data formats to/from EDI standards\n- **Communication Methods**: AS2, SFTP, VAN, or API-based transmission\n- **Testing**: Required before production implementation\n- **Monitoring**: Regular monitoring of EDI flows for errors or exceptions\n\n## Resources for Learning More",
+  "metadata": {
+    "source": "docs/edi/edi_basics.md",
+    "relative_path": "docs/edi/edi_basics.md",
+    "filename": "edi_basics.md",
+    "filetype": "md",
+    "chunk_index": 2,
+    "total_chunks": 4
+  }
+}

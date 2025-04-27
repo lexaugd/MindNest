@@ -1,0 +1,11 @@
+{
+  "content": "The visualization activity of the Big Data Application Provider prepares\nelements of the processed data and the output of the analytic activity\nfor presentation to the Data Consumer. The objective of this activity is\nto format and present data in such a way as to optimally communicate\nmeaning and knowledge. The visualization preparation may involve\nproducing a text-based report or rendering the analytic results as some\nform of graphic. The resulting output may be a static visualization and\nmay simply be stored through the Big Data Framework Provider for later\naccess. However, the visualization activity frequently interacts with\nthe access activity, the analytics activity, and the Big Data Framework\nProvider (processing and platform) to provide interactive visualization\nof the data to the Data Consumer based on parameters provided to the\naccess activity by the Data Consumer. The visualization activity may be\ncompletely application-implemented, leverage one or more application",
+  "metadata": {
+    "source": "docs/edi/edi_introduction-component-specific-interface-requirements.md",
+    "relative_path": "docs/edi/edi_introduction-component-specific-interface-requirements.md",
+    "filename": "edi_introduction-component-specific-interface-requirements.md",
+    "filetype": "md",
+    "chunk_index": 16,
+    "total_chunks": 24
+  }
+}

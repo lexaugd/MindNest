@@ -1,0 +1,11 @@
+{
+  "content": "## Compute Management - Containers\n\n\n### Containers {#sec:spec-containers}\n\n{include=./spec/containers.md}\n\n#### containers.yaml\n\n```{include=./spec/containers.yaml}\n```",
+  "metadata": {
+    "source": "docs/edi/edi_introduction-compute-management-containers.md",
+    "relative_path": "docs/edi/edi_introduction-compute-management-containers.md",
+    "filename": "edi_introduction-compute-management-containers.md",
+    "filetype": "md",
+    "chunk_index": 0,
+    "total_chunks": 1
+  }
+}

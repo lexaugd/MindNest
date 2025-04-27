@@ -1,0 +1,11 @@
+{
+  "content": "interactions and to allow leveraging of experiment management frameworks\nin scripted fashion. A customization of parameters is needed on several\nlevels. On the highest level, application-motivated\nparameters are needed to drive the orchestration of the experiment. On\nlower levels, these high-level parameters may drive and create\nservice-level agreements, augmented specifications, and parameters that\ncould even lead to the orchestration of infrastructure and services to\nsatisfy experiment needs.",
+  "metadata": {
+    "source": "docs/edi/edi_introduction-high-level-requirements-of-the-interface-approach.md",
+    "relative_path": "docs/edi/edi_introduction-high-level-requirements-of-the-interface-approach.md",
+    "filename": "edi_introduction-high-level-requirements-of-the-interface-approach.md",
+    "filetype": "md",
+    "chunk_index": 6,
+    "total_chunks": 11
+  }
+}

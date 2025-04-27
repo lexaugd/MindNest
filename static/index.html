@@ -5,135 +5,459 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>MindNest Assistant</title>
     <style>
+        :root {
+            --bg-primary: #0f1117;
+            --bg-secondary: #1a1c22;
+            --text-primary: #ffffff;
+            --text-secondary: #c5c5d2;
+            --accent-primary: #10a37f;
+            --accent-hover: #0e8f6e;
+            --user-msg-bg: #2e3238;
+            --assistant-msg-bg: #343541;
+            --border-color: #4a4b53;
+            --sidebar-width: 260px;
+        }
+        
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+        
         body {
-            font-family: Arial, sans-serif;
-            max-width: 900px;
-            margin: 0 auto;
-            padding: 20px;
-            background-color: #f5f5f5;
-        }
-        .container {
+            font-family: 'Segoe UI', 'Open Sans', -apple-system, BlinkMacSystemFont, sans-serif;
+            background-color: var(--bg-primary);
+            color: var(--text-primary);
+            height: 100vh;
+            overflow: hidden;
             display: flex;
-            gap: 20px;
         }
-        .left-panel {
-            flex: 0 0 250px;
-            background-color: white;
-            border-radius: 10px;
-            padding: 20px;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        
+        .sidebar {
+            width: var(--sidebar-width);
+            background-color: var(--bg-secondary);
+            height: 100vh;
+            padding: 16px;
+            display: flex;
+            flex-direction: column;
+            border-right: 1px solid var(--border-color);
+            overflow-y: auto;
         }
-        .chat-container {
+        
+        .main-container {
             flex: 1;
-            background-color: white;
-            border-radius: 10px;
-            padding: 20px;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
-        }
-        .messages {
-            height: 400px;
-            overflow-y: auto;
-            margin-bottom: 20px;
-            padding: 10px;
-            border: 1px solid #ddd;
-            border-radius: 5px;
-        }
-        .message {
-            margin-bottom: 10px;
-            padding: 10px;
-            border-radius: 5px;
-        }
-        .user-message {
-            background-color: #e3f2fd;
-            margin-left: 20%;
-        }
-        .assistant-message {
-            background-color: #f5f5f5;
-            margin-right: 20%;
-        }
-        .input-container {
             display: flex;
-            gap: 10px;
+            flex-direction: column;
+            height: 100vh;
+            max-width: calc(100% - var(--sidebar-width));
         }
-        input[type="text"], input[type="file"] {
-            flex-grow: 1;
-            padding: 10px;
-            border: 1px solid #ddd;
-            border-radius: 5px;
+        
+        .header {
+            padding: 16px;
+            font-size: 18px;
+            font-weight: 600;
+            border-bottom: 1px solid var(--border-color);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
         }
-        button {
-            padding: 10px 20px;
-            background-color: #2196f3;
-            color: white;
-            border: none;
-            border-radius: 5px;
-            cursor: pointer;
-        }
-        button:hover {
-            background-color: #1976d2;
-        }
-        .sources {
-            font-size: 0.8em;
-            color: #666;
-            margin-top: 5px;
-        }
-        .document-list {
-            margin-top: 20px;
-            max-height: 300px;
+        
+        .messages-container {
+            flex: 1;
             overflow-y: auto;
+            padding: 0;
+            scroll-behavior: smooth;
         }
-        .document-item {
-            padding: 8px;
-            margin-bottom: 5px;
-            background-color: #f9f9f9;
-            border-radius: 5px;
-            font-size: 14px;
-        }
-        .heading {
-            margin-top: 20px;
-            margin-bottom: 10px;
-            font-weight: bold;
-        }
-        .upload-container {
-            margin-top: 10px;
-            margin-bottom: 20px;
-        }
-        .upload-btn {
-            margin-top: 10px;
+        
+        .message {
+            padding: 24px;
+            display: flex;
+            flex-direction: column;
+            border-bottom: 1px solid var(--border-color);
+            max-width: 800px;
+            margin: 0 auto;
             width: 100%;
         }
-        .status {
-            margin-top: 10px;
+        
+        .message-content {
+            margin-top: 8px;
+            line-height: 1.5;
+        }
+        
+        .user-message {
+            background-color: var(--user-msg-bg);
+        }
+        
+        .assistant-message {
+            background-color: var(--assistant-msg-bg);
+        }
+        
+        .author {
+            font-weight: 600;
+            font-size: 16px;
+        }
+        
+        .input-area {
+            padding: 16px;
+            background-color: var(--bg-primary);
+            border-top: 1px solid var(--border-color);
+            position: relative;
+        }
+        
+        .input-container {
+            max-width: 800px;
+            margin: 0 auto;
+            position: relative;
+        }
+        
+        input[type="text"] {
+            width: 100%;
+            padding: 12px 16px;
+            padding-right: 50px;
+            border-radius: 8px;
+            border: 1px solid var(--border-color);
+            background-color: var(--bg-secondary);
+            color: var(--text-primary);
+            font-size: 16px;
+            outline: none;
+        }
+        
+        input[type="text"]:focus {
+            border-color: var(--accent-primary);
+        }
+        
+        .send-button {
+            position: absolute;
+            right: 8px;
+            top: 50%;
+            transform: translateY(-50%);
+            background-color: var(--accent-primary);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            padding: 8px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .send-button:hover {
+            background-color: var(--accent-hover);
+        }
+        
+        .heading {
+            font-size: 14px;
+            color: var(--text-secondary);
+            margin-bottom: 16px;
+            font-weight: 600;
+            text-transform: uppercase;
+        }
+        
+        .sidebar-section {
+            margin-bottom: 24px;
+        }
+        
+        .upload-container {
+            margin-bottom: 16px;
+        }
+        
+        .file-input-container {
+            position: relative;
+            margin-bottom: 12px;
+        }
+        
+        .file-input-label {
+            display: block;
             padding: 10px;
-            background-color: #e8f5e9;
-            border-radius: 5px;
+            background-color: var(--bg-primary);
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            color: var(--text-secondary);
+            cursor: pointer;
+            text-align: center;
+            font-size: 14px;
+        }
+        
+        .file-input-label:hover {
+            border-color: var(--accent-primary);
+        }
+        
+        input[type="file"] {
+            position: absolute;
+            top: 0;
+            left: 0;
+            opacity: 0;
+            width: 100%;
+            height: 100%;
+            cursor: pointer;
+        }
+        
+        .upload-btn {
+            width: 100%;
+            padding: 10px;
+            background-color: var(--accent-primary);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 14px;
+        }
+        
+        .upload-btn:hover {
+            background-color: var(--accent-hover);
+        }
+        
+        .upload-btn:disabled {
+            background-color: var(--border-color);
+            cursor: not-allowed;
+        }
+        
+        .status {
+            margin-top: 12px;
+            padding: 10px;
+            background-color: rgba(16, 163, 127, 0.2);
+            border-radius: 8px;
             font-size: 14px;
             display: none;
+        }
+        
+        .document-list {
+            margin-top: 12px;
+            overflow-y: auto;
+            max-height: calc(100vh - 360px);
+        }
+        
+        .document-item {
+            padding: 12px;
+            margin-bottom: 8px;
+            background-color: var(--bg-primary);
+            border-radius: 8px;
+            font-size: 14px;
+            color: var(--text-secondary);
+        }
+        
+        .sources {
+            font-size: 12px;
+            color: var(--text-secondary);
+            margin-top: 12px;
+            padding-top: 12px;
+            border-top: 1px solid var(--border-color);
+        }
+        
+        .settings-container {
+            margin-top: 12px;
+        }
+        
+        .settings-item {
+            margin-bottom: 16px;
+        }
+        
+        .settings-label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 500;
+            color: var(--text-primary);
+        }
+        
+        .settings-description {
+            font-size: 12px;
+            color: var(--text-secondary);
+            margin-top: 4px;
+        }
+        
+        .settings-value {
+            font-size: 12px;
+            color: var(--accent-primary);
+            margin-top: 4px;
+        }
+        
+        input[type="range"] {
+            width: 100%;
+            background-color: var(--bg-primary);
+            height: 4px;
+            border-radius: 2px;
+            outline: none;
+            -webkit-appearance: none;
+        }
+        
+        input[type="range"]::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            width: 16px;
+            height: 16px;
+            background-color: var(--accent-primary);
+            border-radius: 50%;
+            cursor: pointer;
+        }
+        
+        input[type="checkbox"] {
+            margin-right: 8px;
+        }
+        
+        .settings-button {
+            width: 100%;
+            padding: 10px;
+            background-color: var(--accent-primary);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 14px;
+            margin-top: 8px;
+        }
+        
+        .settings-button:hover {
+            background-color: var(--accent-hover);
+        }
+        
+        @media (max-width: 768px) {
+            .sidebar {
+                display: none;
+            }
+            .main-container {
+                max-width: 100%;
+            }
+        }
+        
+        .loading-indicator {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 8px;
+            margin: 10px 0;
+        }
+        
+        .dot {
+            display: inline-block;
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            background-color: var(--accent-primary);
+            animation: pulse 1.5s infinite ease-in-out;
+        }
+        
+        .dot:nth-child(2) {
+            animation-delay: 0.3s;
+        }
+        
+        .dot:nth-child(3) {
+            animation-delay: 0.6s;
+        }
+        
+        @keyframes pulse {
+            0%, 100% {
+                transform: scale(0.7);
+                opacity: 0.5;
+            }
+            50% {
+                transform: scale(1);
+                opacity: 1;
+            }
+        }
+        
+        .error-message {
+            background-color: rgba(255, 0, 0, 0.1);
+        }
+        
+        .error-message .author {
+            color: #e53935;
+        }
+        
+        .settings-select {
+            width: 100%;
+            padding: 8px;
+            border-radius: 8px;
+            border: 1px solid var(--border-color);
+            background-color: var(--bg-secondary);
+            color: var(--text-primary);
+            font-size: 14px;
+            margin-top: 4px;
+        }
+        
+        .settings-select:focus {
+            border-color: var(--accent-primary);
+            outline: none;
         }
     </style>
 </head>
 <body>
-    <h1>MindNest Assistant</h1>
-    <div class="container">
-        <div class="left-panel">
+    <div class="sidebar">
+        <div class="sidebar-section">
             <div class="heading">Upload Documents</div>
             <div class="upload-container">
-                <input type="file" id="fileUpload" accept=".txt,.pdf,.md">
-                <button class="upload-btn" onclick="uploadDocument()">Upload</button>
+                <div class="file-input-container">
+                    <label for="fileUpload" class="file-input-label">Choose a file</label>
+                    <input type="file" id="fileUpload" accept=".txt,.pdf,.md,.java,.groovy">
+                </div>
+                <button class="upload-btn" id="uploadBtn" onclick="uploadDocument()">Upload</button>
                 <div id="uploadStatus" class="status"></div>
             </div>
-            
+        </div>
+        
+        <div class="sidebar-section">
             <div class="heading">Knowledge Base</div>
             <div id="documentList" class="document-list">
                 <div class="document-item">No documents uploaded yet</div>
             </div>
         </div>
         
-        <div class="chat-container">
-            <div class="messages" id="messages"></div>
+        <div class="sidebar-section">
+            <div class="heading">Performance Settings</div>
+            <div class="settings-container">
+                <div class="settings-item">
+                    <label class="settings-label">
+                        <input type="checkbox" id="useSmallModel"> Use Faster Model
+                    </label>
+                    <div class="settings-description">Switch to a smaller, faster model</div>
+                </div>
+                <div class="settings-item">
+                    <label class="settings-label">Context Size</label>
+                    <input type="range" id="contextSize" min="200" max="2000" step="100" value="800">
+                    <div class="settings-value"><span id="contextSizeValue">800</span> tokens</div>
+                    <div class="settings-description">Lower values = faster responses</div>
+                </div>
+                <div class="settings-item">
+                    <label class="settings-label">Conversation Mode</label>
+                    <select id="conversationMode" class="settings-select">
+                        <option value="professional">Professional</option>
+                        <option value="passive_aggressive">Passive Aggressive</option>
+                        <option value="humorous">Humorous</option>
+                    </select>
+                    <div class="settings-description">How the assistant responds to casual conversation</div>
+                </div>
+                <div class="settings-item">
+                    <label class="settings-label">Query Classifier</label>
+                    <select id="queryClassifierMode" class="settings-select">
+                        <option value="embeddings">Embeddings (Fastest)</option>
+                        <option value="neural">Neural (Most Accurate)</option>
+                        <option value="hybrid">Hybrid (Best Balance)</option>
+                        <option value="regex">Legacy Regex (Fallback)</option>
+                    </select>
+                    <div class="settings-description">How to distinguish conversation from document queries</div>
+                </div>
+                <button id="applySettings" class="settings-button">Apply Settings</button>
+                <div id="settingsStatus" class="status"></div>
+            </div>
+        </div>
+    </div>
+    
+    <div class="main-container">
+        <div class="header">
+            MindNest Assistant
+        </div>
+        
+        <div class="messages-container" id="messages">
+            <!-- Messages will be appended here -->
+        </div>
+        
+        <div class="input-area">
             <div class="input-container">
                 <input type="text" id="question" placeholder="Ask a question...">
-                <button onclick="askQuestion()">Send</button>
+                <button class="send-button" onclick="askQuestion()">
+                    <svg fill="currentColor" width="16" height="16" viewBox="0 0 24 24">
+                        <path d="M2.01 21L23 12 2.01 3 2 10l15 2-15 2z"></path>
+                    </svg>
+                </button>
             </div>
         </div>
     </div>
@@ -143,11 +467,130 @@
         const questionInput = document.getElementById('question');
         const documentList = document.getElementById('documentList');
         const uploadStatus = document.getElementById('uploadStatus');
+        const uploadBtn = document.getElementById('uploadBtn');
+        const fileUpload = document.getElementById('fileUpload');
 
-        // Load documents on page load
+        // Model settings controls
+        const useSmallModel = document.getElementById('useSmallModel');
+        const contextSize = document.getElementById('contextSize');
+        const contextSizeValue = document.getElementById('contextSizeValue');
+        const conversationMode = document.getElementById('conversationMode');
+        const queryClassifierMode = document.getElementById('queryClassifierMode');
+        const applySettings = document.getElementById('applySettings');
+        const settingsStatus = document.getElementById('settingsStatus');
+        
+        // Update context size value when slider changes
+        contextSize.addEventListener('input', function() {
+            contextSizeValue.textContent = contextSize.value;
+        });
+        
+        // Apply model settings
+        applySettings.addEventListener('click', async function() {
+            settingsStatus.textContent = 'Applying settings...';
+            settingsStatus.style.display = 'block';
+            applySettings.disabled = true;
+            
+            try {
+                const response = await fetch('/config/model', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        use_small_model: useSmallModel.checked,
+                        max_context_tokens: parseInt(contextSize.value),
+                        conversation_mode: conversationMode.value,
+                        query_classifier_mode: queryClassifierMode.value
+                    }),
+                });
+                
+                const result = await response.json();
+                
+                if (result.status === 'success') {
+                    settingsStatus.textContent = result.message || 'Settings updated successfully';
+                    
+                    // Add a system message
+                    let settingsMessage = `Model settings updated.`;
+                    
+                    if (result.config) {
+                        if (result.config.use_small_model !== undefined) {
+                            settingsMessage += ` Using ${result.config.use_small_model ? 'smaller' : 'larger'} model`;
+                        }
+                        
+                        if (result.config.max_context_tokens) {
+                            settingsMessage += ` with ${result.config.max_context_tokens} context tokens`;
+                        }
+                        
+                        if (result.config.conversation_mode) {
+                            settingsMessage += `. Conversation mode: ${result.config.conversation_mode}`;
+                        }
+                        
+                        if (result.config.query_classifier_mode) {
+                            settingsMessage += `. Query classifier mode: ${result.config.query_classifier_mode}`;
+                        }
+                    }
+                    
+                    addMessage(settingsMessage, 'assistant');
+                } else {
+                    settingsStatus.textContent = 'Error applying settings';
+                }
+            } catch (error) {
+                settingsStatus.textContent = `Error: ${error.message || 'Failed to update settings'}`;
+                console.error('Error updating model settings:', error);
+            } finally {
+                applySettings.disabled = false;
+            }
+        });
+        
+        // Fetch current model settings on load
+        async function loadModelSettings() {
+            try {
+                const response = await fetch('/config');
+                const data = await response.json();
+                
+                if (data.status === 'success' && data.config) {
+                    // Update model checkbox based on current model
+                    if (data.config.use_small_model) {
+                        useSmallModel.checked = true;
+                    }
+                    
+                    // Update context size slider
+                    if (data.config.max_context_tokens) {
+                        contextSize.value = data.config.max_context_tokens;
+                        contextSizeValue.textContent = data.config.max_context_tokens;
+                    }
+                    
+                    // Update conversation mode dropdown
+                    if (data.config.conversation_mode) {
+                        conversationMode.value = data.config.conversation_mode;
+                    }
+                    
+                    // Update query classifier mode dropdown
+                    if (data.config.query_classifier_mode) {
+                        queryClassifierMode.value = data.config.query_classifier_mode;
+                    }
+                }
+            } catch (error) {
+                console.error('Error loading model settings:', error);
+            }
+        }
+        
+        // Load settings on page load
+        loadModelSettings();
+
+        // Add initial welcome message
         window.onload = function() {
             loadDocuments();
+            addMessage("Hello! I'm your MindNest Assistant. I can help answer questions about your documents. You can start by uploading documents or asking me questions about existing content.", 'assistant');
         };
+
+        fileUpload.addEventListener('change', function() {
+            if (fileUpload.files.length > 0) {
+                uploadBtn.disabled = false;
+            } else {
+                uploadBtn.disabled = true;
+            }
+        });
 
         questionInput.addEventListener('keypress', function(e) {
             if (e.key === 'Enter') {
@@ -158,35 +601,37 @@
         async function loadDocuments() {
             try {
                 const response = await fetch('/documents');
-                const documents = await response.json();
+                const data = await response.json();
                 
-                if (documents.length === 0) {
-                    documentList.innerHTML = '<div class="document-item">No documents uploaded yet</div>';
+                if (!data.sources || data.sources.length === 0) {
+                    documentList.innerHTML = '<div class="document-item">No documents found</div>';
                     return;
                 }
                 
                 let html = '';
-                documents.forEach(doc => {
-                    html += `<div class="document-item">${doc.filename} (${doc.chunk_count} chunks)</div>`;
+                data.sources.forEach(source => {
+                    const filename = source.split('/').pop();
+                    html += `<div class="document-item">${filename}</div>`;
                 });
                 documentList.innerHTML = html;
             } catch (error) {
                 console.error('Error loading documents:', error);
+                documentList.innerHTML = '<div class="document-item">Error loading documents</div>';
             }
         }
 
         async function uploadDocument() {
-            const fileInput = document.getElementById('fileUpload');
-            const file = fileInput.files[0];
+            const file = fileUpload.files[0];
             
             if (!file) {
                 alert('Please select a file to upload');
                 return;
             }
             
-            // Show upload status
+            // Show upload status and disable button
             uploadStatus.textContent = 'Uploading...';
             uploadStatus.style.display = 'block';
+            uploadBtn.disabled = true;
             
             const formData = new FormData();
             formData.append('file', file);
@@ -198,10 +643,10 @@
                 });
                 
                 const result = await response.json();
-                uploadStatus.textContent = `${result.message} with ${result.chunks} chunks.`;
+                uploadStatus.textContent = result.message || 'Document uploaded successfully';
                 
                 // Clear file input
-                fileInput.value = '';
+                fileUpload.value = '';
                 
                 // Reload document list
                 loadDocuments();
@@ -210,8 +655,11 @@
                 addMessage(`Added document: ${file.name}`, 'assistant');
                 
             } catch (error) {
-                uploadStatus.textContent = `Error: ${error.message}`;
+                uploadStatus.textContent = `Error: ${error.message || 'Failed to upload document'}`;
                 console.error('Error uploading document:', error);
+            } finally {
+                // Re-enable button after operation is complete
+                uploadBtn.disabled = false;
             }
         }
 
@@ -222,6 +670,9 @@
             // Add user message
             addMessage(question, 'user');
             questionInput.value = '';
+            
+            // Show loading indicator
+            const loadingId = showLoading();
 
             try {
                 const response = await fetch('/ask', {
@@ -232,20 +683,81 @@
                     body: JSON.stringify({ text: question }),
                 });
 
+                // Hide loading indicator
+                hideLoading(loadingId);
+
+                if (!response.ok) {
+                    throw new Error(`Server responded with status: ${response.status}`);
+                }
+
                 const data = await response.json();
                 
+                if (data.detail) {
+                    // This is an error message from the server
+                    addMessage(`Error: ${data.detail}`, 'error');
+                    return;
+                }
+                
+                // Format the response text with line breaks
+                const formattedText = data.text.replace(/\n/g, '<br>');
+                
                 // Add assistant message
-                addMessage(data.text, 'assistant', data.sources);
+                addMessage(formattedText, 'assistant', data.sources, true);
             } catch (error) {
-                addMessage('Sorry, there was an error processing your question.', 'assistant');
+                // Hide loading indicator if it's still showing
+                hideLoading(loadingId);
+                addMessage(`Sorry, there was an error: ${error.message}`, 'error');
                 console.error('Error asking question:', error);
             }
         }
 
-        function addMessage(text, type, sources = []) {
+        // Show a loading indicator in the message area
+        function showLoading() {
+            const loadingDiv = document.createElement('div');
+            loadingDiv.className = 'message loading-message';
+            loadingDiv.innerHTML = `
+                <div class="author">MindNest</div>
+                <div class="message-content">
+                    <div class="loading-indicator">
+                        <span class="dot"></span>
+                        <span class="dot"></span>
+                        <span class="dot"></span>
+                    </div>
+                </div>
+            `;
+            messagesContainer.appendChild(loadingDiv);
+            messagesContainer.scrollTop = messagesContainer.scrollHeight;
+            return Date.now(); // Return a unique ID for this loading indicator
+        }
+
+        // Hide the loading indicator
+        function hideLoading(id) {
+            const loadingMessages = document.querySelectorAll('.loading-message');
+            loadingMessages.forEach(element => {
+                element.remove();
+            });
+        }
+
+        function addMessage(text, type, sources = [], isHTML = false) {
             const messageDiv = document.createElement('div');
             messageDiv.className = `message ${type}-message`;
-            messageDiv.textContent = text;
+            
+            const authorDiv = document.createElement('div');
+            authorDiv.className = 'author';
+            authorDiv.textContent = type === 'user' ? 'You' : 
+                                   type === 'error' ? 'Error' : 'MindNest';
+            messageDiv.appendChild(authorDiv);
+            
+            const contentDiv = document.createElement('div');
+            contentDiv.className = 'message-content';
+            
+            if (isHTML) {
+                contentDiv.innerHTML = text;
+            } else {
+                contentDiv.textContent = text;
+            }
+            
+            messageDiv.appendChild(contentDiv);
 
             if (sources && sources.length > 0) {
                 const sourcesDiv = document.createElement('div');

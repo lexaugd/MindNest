@@ -1,0 +1,11 @@
+{
+  "content": "towards the design of the NBDRA. Hence the expectation is that: (1) the\ninterfaces can be used to help implement a Big Data architecture for a\nspecific use case; and (2) the proper implementation. This approach can\nfacilitate subsequent analysis and comparison of the use cases.",
+  "metadata": {
+    "source": "docs/edi/edi_introduction-report-production-secproduction.md",
+    "relative_path": "docs/edi/edi_introduction-report-production-secproduction.md",
+    "filename": "edi_introduction-report-production-secproduction.md",
+    "filetype": "md",
+    "chunk_index": 3,
+    "total_chunks": 7
+  }
+}

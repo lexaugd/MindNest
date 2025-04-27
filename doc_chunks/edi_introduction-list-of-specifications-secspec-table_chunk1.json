@@ -1,0 +1,11 @@
+{
+  "content": "## List of specifications {#sec:spec-table}\n\n\nThe following table lists the current set of resource objects that\nare defined in this draft. Additional objects are also available in GitHub \n[@nist-github-bdra-spec].\n\n@tbl:spec-table shows the list of currently included specification in this \nversion of the document.\n\n{include=./specstable.md}\n\n\n@fig:bdra-provider-view shows the provider view of the specification resources.\n\n![Provider view](images/nist-bdra.png){#fig:bdra-provider-view}\n\n\n\n@fig:spec shows the resources view of the specification resources.\n\n![Resource view](images/nist-specification.png){#fig:spec}",
+  "metadata": {
+    "source": "docs/edi/edi_introduction-list-of-specifications-secspec-table.md",
+    "relative_path": "docs/edi/edi_introduction-list-of-specifications-secspec-table.md",
+    "filename": "edi_introduction-list-of-specifications-secspec-table.md",
+    "filetype": "md",
+    "chunk_index": 0,
+    "total_chunks": 1
+  }
+}

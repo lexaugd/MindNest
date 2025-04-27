@@ -1,0 +1,11 @@
+{
+  "content": "Test Documentation\n\nThis is a test documentation file to verify that our AI assistant can read and understand text files.\n\nKey Features:\n1. Simple text format\n2. Easy to read\n3. Contains basic documentation structure\n\nExample Usage:\nThe system should be able to answer questions about:\n- Java code in the java folder\n- Groovy code in the groovy folder\n- Documentation in the txt folder\n\nThis is just a test file to verify that everything is working correctly.",
+  "metadata": {
+    "source": "docs/txt/test_documentation.txt",
+    "relative_path": "docs/txt/test_documentation.txt",
+    "filename": "test_documentation.txt",
+    "filetype": "txt",
+    "chunk_index": 0,
+    "total_chunks": 1
+  }
+}

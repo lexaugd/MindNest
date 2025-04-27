@@ -1,0 +1,11 @@
+{
+  "content": "## Identity {#sec:spec-identity}\n\nAs part of services an identity often needs to be specified. In\naddition, such persons [@www-eduperson] are often part of groups. Thus, \nthree important terms related to the identity are distinguished as follows:\n\n* Organization: The information representing an Organization that\n  manages a Big Data Service (@sec:spec-organization)\n* Group: A group that a person may belong to that is important to\n  define access to services (included in @sec:spec-organization)\n* User: The information identifying the profile of a person (@sec:spec-user)\n\n### Organization {#sec:spec-organization}\n\n{include=./spec/organization.md}\n\n#### organization.yaml\n\n```{include=./spec/organization.yaml}\n```\n\n### User {#sec:spec-user}\n\n{include=./spec/user.md}\n\n#### user.yaml\n\n```{include=./spec/user.yaml}\n```\n\n### Account {#sec:spec-account}\n\n{include=./spec/account.md}\n\n#### account.yaml\n\n```{include=./spec/account.yaml}\n\n\n### Public Key Store {#sec:spec-publickeystore}",
+  "metadata": {
+    "source": "docs/edi/edi_introduction-identity-secspec-identity.md",
+    "relative_path": "docs/edi/edi_introduction-identity-secspec-identity.md",
+    "filename": "edi_introduction-identity-secspec-identity.md",
+    "filetype": "md",
+    "chunk_index": 0,
+    "total_chunks": 2
+  }
+}

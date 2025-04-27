@@ -1,0 +1,11 @@
+{
+  "content": "it is a stringent requirement in healthcare. Thus, deriving\narchitectural frameworks for both may use largely similar components,\nbut addressing security issues will be very different. The security of\ninterfaces may be addressed in other documents.  In this document,\nthey are considered an advanced use case showcasing that the validity\nof the specifications introduced here is preserved, even if security\nand privacy requirements differ vastly among application use cases.",
+  "metadata": {
+    "source": "docs/edi/edi_introduction-high-level-requirements-of-the-interface-approach.md",
+    "relative_path": "docs/edi/edi_introduction-high-level-requirements-of-the-interface-approach.md",
+    "filename": "edi_introduction-high-level-requirements-of-the-interface-approach.md",
+    "filetype": "md",
+    "chunk_index": 10,
+    "total_chunks": 11
+  }
+}

@@ -1,0 +1,11 @@
+{
+  "content": "### 1. API-Enabled EDI\n\nUsing APIs to bridge the gap between EDI and modern applications:\n\n- REST or SOAP APIs wrap EDI functionality\n- JSON/XML to EDI translation and vice versa\n- Benefits:\n  - Easier integration with modern systems\n  - Developer-friendly interfaces\n  - Leverages modern security and infrastructure\n- Example implementation:\n  ```\n  Application \u2192 API Gateway \u2192 EDI Translator \u2192 EDI Message \u2192 Trading Partner\n  ```\n\n### 2. Cloud-Based EDI\n\nLeveraging cloud platforms for EDI processing:\n\n- EDI-as-a-Service platforms\n- Hybrid cloud/on-premises solutions\n- Benefits:\n  - Reduced infrastructure costs\n  - Scalability and flexibility\n  - Managed compliance and standards updates\n- Implementation considerations:\n  - Data security and privacy\n  - Integration with existing systems\n  - Service level agreements (SLAs)\n\n### 3. Microservices Architecture for EDI\n\nBreaking down EDI functionality into discrete services:",
+  "metadata": {
+    "source": "docs/edi/edi_integration_patterns.md",
+    "relative_path": "docs/edi/edi_integration_patterns.md",
+    "filename": "edi_integration_patterns.md",
+    "filetype": "md",
+    "chunk_index": 1,
+    "total_chunks": 6
+  }
+}

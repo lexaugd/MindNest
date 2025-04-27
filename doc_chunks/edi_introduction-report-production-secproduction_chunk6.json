@@ -1,0 +1,11 @@
+{
+  "content": "While each NBDIF volume was created with a specific focus within Big\nData, all volumes are interconnected. During creation, the volumes\ngave and/or received input from other volumes. Broad topics (e.g.,\ndefinition, architecture) may be discussed in several volumes with the\ndiscussion circumscribed by the volume\u2019s particular focus. Arrows\nshown in @fig:nist-doc-nav indicate the main flow of\ninput/output. Volumes 2, 3, and 5 (blue circles) are essentially\nstandalone documents that provide output to other volumes (e.g., to\nVolume 6). These volumes contain the initial situational awareness\nresearch. Volumes 4, 7, 8, and 9 (green circles) primarily received\ninput from other volumes during the creation of the particular\nvolume. Volumes 1 and 6 (red circles) were developed using the initial\nsituational awareness research and continued to be modified based on\nwork in other volumes. These volumes also provided input to the green\ncircle volumes.",
+  "metadata": {
+    "source": "docs/edi/edi_introduction-report-production-secproduction.md",
+    "relative_path": "docs/edi/edi_introduction-report-production-secproduction.md",
+    "filename": "edi_introduction-report-production-secproduction.md",
+    "filetype": "md",
+    "chunk_index": 5,
+    "total_chunks": 7
+  }
+}

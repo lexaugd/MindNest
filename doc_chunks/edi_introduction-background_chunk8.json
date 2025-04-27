@@ -1,0 +1,11 @@
+{
+  "content": "The *NIST Big Data Interoperability Framework (NBDIF)* was released in three versions, which correspond \nto the three stages of the NBD-PWG work. Version 3 (current version) of the NBDIF volumes resulted from \nStage 3 work with major emphasis on the validation of the NBDRA Interfaces and content enhancement. Stage \n3 work built upon the foundation created during Stage 2 and Stage 1. The current effort documented in this \nvolume reflects concepts developed within the rapidly evolving field of Big Data. The three stages \n(in reverse order) aim to achieve the following with respect to the NIST Big Data Reference Architecture (NBDRA).\n\nStage 3: Validate the NBDRA by building Big Data general applications through the general interfaces;\nStage 2: Define general interfaces between the NBDRA components; and\nStage 1: Identify the high-level Big Data reference architecture key components, which are technology-, \ninfrastructure-, and vendor-agnostic.",
+  "metadata": {
+    "source": "docs/edi/edi_introduction-background.md",
+    "relative_path": "docs/edi/edi_introduction-background.md",
+    "filename": "edi_introduction-background.md",
+    "filetype": "md",
+    "chunk_index": 7,
+    "total_chunks": 10
+  }
+}

@@ -1,17 +1,24 @@
+"""
+Incremental vector store for efficient document updates.
+Provides incremental updates to avoid full rebuilds when documents change.
+"""
+
 import os
 import shutil
-from typing import List, Dict, Optional, Any
+from typing import List, Dict, Optional, Any, Union
+from pathlib import Path
+
 from langchain_community.vectorstores import Chroma
 from langchain_community.embeddings import HuggingFaceEmbeddings
-from langchain.text_splitter import RecursiveCharacterTextSplitter
-from langchain_community.document_loaders import (
-    TextLoader,
-    UnstructuredMarkdownLoader,
-    PythonLoader
-)
 from langchain.docstore.document import Document
 
+from utils.config import config
+from utils.logger import get_logger
 from utils.document_tracker import DocumentTracker
+from utils.document_processor import DocumentProcessor
+
+# Get module logger
+logger = get_logger(__name__)
 
 class IncrementalVectorStore:
     """
@@ -21,119 +28,52 @@ class IncrementalVectorStore:
     
     def __init__(
         self, 
-        persist_directory: str = "chroma_db",
-        docs_directory: str = "docs",
-        embedding_model_name: str = "all-MiniLM-L6-v2"
+        persist_directory: Optional[str] = None,
+        docs_directory: Optional[Union[str, Path]] = None,
+        embedding_model_name: Optional[str] = None
     ):
         """
         Initialize the incremental vector store.
         
         Args:
-            persist_directory: Directory to store the vector database
-            docs_directory: Directory containing the documents
-            embedding_model_name: Name of the embedding model to use
+            persist_directory: Directory to store the vector database (default: from config)
+            docs_directory: Directory containing the documents (default: from config)
+            embedding_model_name: Name of the embedding model to use (default: from config)
         """
-        self.persist_directory = persist_directory
-        self.docs_directory = docs_directory
-        self.embedding_model_name = embedding_model_name
+        # Use provided values or defaults from config
+        self.persist_directory = persist_directory if persist_directory is not None else config.persist_directory
+        self.docs_directory = docs_directory if docs_directory is not None else config.docs_dir
+        self.embedding_model_name = embedding_model_name if embedding_model_name is not None else config.embedding_model_name
         
         # Initialize embeddings
+        self._initialize_embeddings()
+        
+        # Initialize document tracker
+        self.tracker = DocumentTracker(docs_dir=str(self.docs_directory))
+        
+        # Initialize document processor
+        self.document_processor = DocumentProcessor(
+            docs_dir=str(self.docs_directory),
+            chunk_size=config.chunk_size,
+            chunk_overlap=config.chunk_overlap
+        )
+    
+    def _initialize_embeddings(self) -> None:
+        """Initialize embeddings with error handling and fallback options."""
         try:
-            print("Initializing embeddings...")
+            logger.info(f"Initializing embeddings with model: {self.embedding_model_name}")
             self.embeddings = HuggingFaceEmbeddings(model_name=self.embedding_model_name)
-            print("Embeddings initialized successfully")
+            logger.info("Embeddings initialized successfully")
         except Exception as e:
-            print(f"Error initializing embeddings: {e}")
+            logger.error(f"Error initializing embeddings: {e}")
             try:
                 # Fallback to basic embeddings
                 from langchain_community.embeddings import FakeEmbeddings
-                print("Falling back to simple embeddings")
+                logger.warning("Falling back to simple embeddings")
                 self.embeddings = FakeEmbeddings(size=384)
             except Exception as e2:
-                print(f"Fatal error initializing embeddings: {e2}")
+                logger.critical(f"Fatal error initializing embeddings: {e2}")
                 raise
-        
-        # Initialize document tracker
-        self.tracker = DocumentTracker(docs_dir=docs_directory)
-        
-        # Initialize text splitter with default values
-        self.chunk_size = 1000
-        self.chunk_overlap = 200
-        self.text_splitter = RecursiveCharacterTextSplitter(
-            chunk_size=self.chunk_size,
-            chunk_overlap=self.chunk_overlap,
-        )
-        
-        # Initialize loaders for different file types
-        self.loaders = {
-            ".txt": TextLoader,
-            ".md": UnstructuredMarkdownLoader,
-            ".py": PythonLoader,
-            ".groovy": TextLoader,
-            ".java": TextLoader,
-            ".js": TextLoader,
-            ".ts": TextLoader,
-        }
-    
-    def _get_documents_from_files(self, file_paths: List[str]) -> List[Document]:
-        """
-        Load documents from specific file paths.
-        
-        Args:
-            file_paths: List of file paths to load documents from
-            
-        Returns:
-            List of loaded documents
-        """
-        documents = []
-        
-        for file_path in file_paths:
-            try:
-                # Get the file extension
-                _, ext = os.path.splitext(file_path)
-                ext = ext.lower()
-                
-                # Skip if we don't have a loader for this file type
-                if ext not in self.loaders:
-                    print(f"No loader available for {ext} files. Skipping {file_path}")
-                    continue
-                
-                # Load the document
-                loader_class = self.loaders[ext]
-                loader = loader_class(file_path)
-                file_docs = loader.load()
-                
-                if file_docs:
-                    print(f"Loaded {len(file_docs)} documents from {file_path}")
-                    documents.extend(file_docs)
-                else:
-                    print(f"No content loaded from {file_path}")
-            except Exception as e:
-                print(f"Error loading document {file_path}: {e}")
-        
-        return documents
-    
-    def _chunk_documents(self, documents: List[Document]) -> List[Document]:
-        """
-        Split documents into chunks for better vector search.
-        
-        Args:
-            documents: List of documents to split
-            
-        Returns:
-            List of document chunks
-        """
-        if not documents:
-            return []
-            
-        print(f"Splitting {len(documents)} documents into chunks")
-        try:
-            split_docs = self.text_splitter.split_documents(documents)
-            print(f"Document splitting complete. Created {len(split_docs)} chunks")
-            return split_docs
-        except Exception as e:
-            print(f"Error splitting documents: {e}")
-            return documents
     
     def initialize_or_update(self, force_rebuild: bool = False) -> Optional[Chroma]:
         """
@@ -147,31 +87,31 @@ class IncrementalVectorStore:
         """
         try:
             # Scan for document changes
-            print("Scanning for document changes...")
+            logger.info("Scanning for document changes...")
             document_changes = self.tracker.scan_documents()
             has_changes = any(len(changes) > 0 for changes in document_changes.values())
             
             # Force rebuild if requested or if vector store doesn't exist
             if force_rebuild or not os.path.exists(self.persist_directory):
                 if force_rebuild and os.path.exists(self.persist_directory):
-                    print("Removing existing vector store for rebuild")
+                    logger.info("Removing existing vector store for rebuild")
                     shutil.rmtree(self.persist_directory)
                 
-                print("Creating new vector store")
+                logger.info("Creating new vector store")
                 return self._full_rebuild()
             
             # If no changes, load existing vector store
             if not has_changes:
-                print("No document changes detected. Loading existing vector store")
+                logger.info("No document changes detected. Loading existing vector store")
                 vectorstore = Chroma(
                     persist_directory=self.persist_directory,
                     embedding_function=self.embeddings
                 )
-                print(f"Loaded existing vector store with {len(vectorstore.get()['ids'])} documents")
+                logger.info(f"Loaded existing vector store with {len(vectorstore.get()['ids'])} documents")
                 return vectorstore
             
             # Process incremental updates
-            print("Processing incremental updates")
+            logger.info("Processing incremental updates")
             new_files = document_changes["new"]
             modified_files = document_changes["modified"]
             deleted_files = document_changes["deleted"]
@@ -182,11 +122,11 @@ class IncrementalVectorStore:
             
             # If more than 30% of documents changed, full rebuild is more efficient
             if total_changes > 0 and total_docs > 0 and (total_changes / total_docs) > 0.3:
-                print(f"Large number of changes detected ({total_changes}/{total_docs}). Performing full rebuild")
+                logger.info(f"Large number of changes detected ({total_changes}/{total_docs}). Performing full rebuild")
                 return self._full_rebuild()
             
             # Load the existing vector store
-            print("Loading existing vector store for incremental update")
+            logger.info("Loading existing vector store for incremental update")
             vectorstore = Chroma(
                 persist_directory=self.persist_directory,
                 embedding_function=self.embeddings
@@ -195,92 +135,122 @@ class IncrementalVectorStore:
             # Process new and modified files
             if new_files or modified_files:
                 files_to_process = new_files + modified_files
-                print(f"Processing {len(files_to_process)} new or modified files")
+                logger.info(f"Processing {len(files_to_process)} new or modified files")
                 
-                # Load documents from files
-                documents = self._get_documents_from_files(files_to_process)
+                # Process documents using document processor
+                documents = self.document_processor.process_files(files_to_process)
                 
-                # Split documents into chunks
-                chunks = self._chunk_documents(documents)
-                
-                if chunks:
-                    # Add documents to vector store
-                    print(f"Adding {len(chunks)} document chunks to vector store")
-                    vectorstore.add_documents(chunks)
+                if documents:
+                    logger.info(f"Adding {len(documents)} document chunks to vector store")
+                    vectorstore.add_documents(documents)
+                    vectorstore.persist()
+                    logger.info("Documents added to vector store")
+                else:
+                    logger.warning("No valid documents found in new or modified files")
             
-            # Process deleted files (would require document IDs linked to file paths)
-            # This is more complex and would require tracking document IDs by file path
+            # Process deleted files
             if deleted_files:
-                print(f"Found {len(deleted_files)} deleted files. Note: Document deletion not implemented yet")
-                # In a more complex implementation, we would:
-                # 1. Track which document IDs belong to which file paths
-                # 2. Remove those document IDs from the vector store
-            
-            # Persist the vector store
-            print("Persisting vector store")
-            vectorstore.persist()
-            print("Vector store updated and persisted successfully")
+                logger.info(f"Processing {len(deleted_files)} deleted files")
+                
+                # Get all document IDs to check which ones to delete
+                all_ids = vectorstore.get()["ids"]
+                all_metadatas = vectorstore.get()["metadatas"]
+                
+                # Find IDs of documents from deleted files
+                ids_to_delete = []
+                for i, metadata in enumerate(all_metadatas):
+                    source = metadata.get("source")
+                    if source and any(source == deleted_file for deleted_file in deleted_files):
+                        ids_to_delete.append(all_ids[i])
+                
+                if ids_to_delete:
+                    logger.info(f"Deleting {len(ids_to_delete)} document chunks from vector store")
+                    vectorstore.delete(ids_to_delete)
+                    vectorstore.persist()
+                    logger.info("Documents deleted from vector store")
+                else:
+                    logger.info("No documents to delete from vector store")
             
             return vectorstore
             
         except Exception as e:
-            print(f"Error initializing or updating vector store: {e}")
-            return None
+            logger.error(f"Error in incremental update: {e}")
+            # Attempt a full rebuild as a fallback
+            logger.warning("Attempting full rebuild as a fallback")
+            try:
+                return self._full_rebuild()
+            except Exception as e2:
+                logger.critical(f"Fatal error in vector store initialization: {e2}")
+                raise
     
     def _full_rebuild(self) -> Optional[Chroma]:
         """
         Perform a full rebuild of the vector store.
         
         Returns:
-            The rebuilt Chroma vector store
+            The newly built Chroma vector store
         """
         try:
-            print("Performing full vector store rebuild")
+            logger.info("Starting full vector store rebuild")
             
-            # Scan all documents to ensure tracker is up to date
-            self.tracker.scan_documents()
+            # Clear existing vector store if it exists
+            if os.path.exists(self.persist_directory):
+                logger.info(f"Removing existing vector store at {self.persist_directory}")
+                shutil.rmtree(self.persist_directory)
             
-            # Get all files from tracker
-            all_files = list(self.tracker.tracking_data["files"].keys())
-            print(f"Loading {len(all_files)} documents")
-            
-            documents = self._get_documents_from_files(all_files)
+            # Process all documents in the docs directory
+            documents = self.document_processor.process_directory()
             
             if not documents:
-                print("No documents to add to vector store!")
-                return None
-            
-            # Split documents into chunks
-            chunks = self._chunk_documents(documents)
-            
-            if not chunks:
-                print("No document chunks created!")
+                logger.warning("No documents found to add to vector store")
                 return None
             
             # Create new vector store
-            print(f"Adding {len(chunks)} document chunks to vector store")
+            logger.info(f"Creating new vector store with {len(documents)} document chunks")
             vectorstore = Chroma.from_documents(
-                documents=chunks,
+                documents=documents,
                 embedding=self.embeddings,
                 persist_directory=self.persist_directory
             )
             
-            # Persist the vector store
-            print("Persisting vector store")
+            # Persist to disk
             vectorstore.persist()
-            print("Vector store created and persisted successfully")
+            logger.info("Vector store created and persisted successfully")
             
             return vectorstore
-        
+            
         except Exception as e:
-            print(f"Error rebuilding vector store: {e}")
-            return None
+            logger.error(f"Error rebuilding vector store: {e}")
+            raise
+
+    def get_document_count(self) -> int:
+        """Get the number of documents in the vector store."""
+        try:
+            vectorstore = Chroma(
+                persist_directory=self.persist_directory,
+                embedding_function=self.embeddings
+            )
+            return len(vectorstore.get()["ids"])
+        except Exception as e:
+            logger.error(f"Error getting document count: {e}")
+            return 0
 
 
 # For testing purposes
 if __name__ == "__main__":
+    # Initialize the vector store
     vector_store = IncrementalVectorStore()
+    
+    # Update the vector store
     vs = vector_store.initialize_or_update()
     
-    if vs is not None:
-        print(f"Vector store ready with {len(vs.get()['ids'])} documents") 
+    if vs:
+        # Test a simple query
+        print("\nTesting query...")
+        results = vs.similarity_search("What is a document?", k=1)
+        if results:
+            print(f"Found result: {results[0].page_content[:100]}...")
+        else:
+            print("No results found")
+    else:
+        print("Vector store initialization failed") 

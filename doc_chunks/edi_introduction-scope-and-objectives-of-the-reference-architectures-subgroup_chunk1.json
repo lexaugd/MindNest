@@ -1,0 +1,11 @@
+{
+  "content": "## Scope and Objectives of the Reference Architectures Subgroup\n\nReference architectures provide \"an authoritative source of\ninformation about a specific subject area that guides and constrains\nthe instantiations of multiple architectures and solutions\"\n[@www-dodaf-arch]. Reference architectures generally serve as a\nfoundation for solution architectures and may also be used for\ncomparison and alignment of instantiations of architectures and\nsolutions.\n\nThe goal of the NBD-PWG Reference Architecture Subgroup is to develop an\nopen reference architecture for Big Data that achieves the following\nobjectives:",
+  "metadata": {
+    "source": "docs/edi/edi_introduction-scope-and-objectives-of-the-reference-architectures-subgroup.md",
+    "relative_path": "docs/edi/edi_introduction-scope-and-objectives-of-the-reference-architectures-subgroup.md",
+    "filename": "edi_introduction-scope-and-objectives-of-the-reference-architectures-subgroup.md",
+    "filetype": "md",
+    "chunk_index": 0,
+    "total_chunks": 4
+  }
+}

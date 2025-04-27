@@ -1,0 +1,11 @@
+{
+  "content": "# Specification {#sec:specification}\n\nThe specifications in this section are provided through an automated\ndocument creation process using the actual OpenAPI specifications yaml\nfiles as the source. All OpenAPI specifications located in the\ncloudmesh/cloudmesh-nist/spec/ directory in GitHub\n[@nist-github-bdra-spec].\n\nLimitations of the current implementation are as follows. It is a\ndemonstration that showcases the generation of a fully functioning\nREST service based on the specifications provided in this\ndocument. However, it is expected that scalability, distribution of\nservices, and other advanced options need to be addressed based on\napplication requirements.",
+  "metadata": {
+    "source": "docs/edi/edi_introduction-specification-secspecification.md",
+    "relative_path": "docs/edi/edi_introduction-specification-secspecification.md",
+    "filename": "edi_introduction-specification-secspecification.md",
+    "filetype": "md",
+    "chunk_index": 0,
+    "total_chunks": 1
+  }
+}

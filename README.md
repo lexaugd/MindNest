@@ -11,6 +11,7 @@ An intelligent documentation system that uses AI to understand and answer questi
 - **Optimized Performance**: Efficient caching and incremental updates for faster responses
 - **Lightweight Mode**: Option to run with vector search only for better performance
 - **Model Switching**: Choose between larger (high quality) or smaller (faster) language models
+<<<<<<< Updated upstream
 - **Multiple Launch Options**: Several ways to start the application including launcher script, direct run, or shell script
 - **Automatic Dependency Management**: Detects and installs missing dependencies automatically
 - **Context Window Optimization**: Intelligent document truncation based on model capabilities
@@ -18,44 +19,88 @@ An intelligent documentation system that uses AI to understand and answer questi
 - **Response Quality Controls**: Validation and formatting to ensure consistent, high-quality responses
 - **Comprehensive Test Suite**: Automated testing for core functionality
 - **Docker Support**: Run in containers with optimized resource configuration
+=======
+- **Direct Runner**: Simple command-line interface to run the application with various options
+- **Docker Support**: Run the application in Docker for easier deployment
+>>>>>>> Stashed changes
 
-## Setup
+## Docker Installation
 
-### Standard Setup
+The easiest way to run MindNest is using Docker, which eliminates dependency issues.
 
-1. Create a virtual environment:
+### Prerequisites
+
+- [Docker](https://docs.docker.com/get-docker/)
+- [Docker Compose](https://docs.docker.com/compose/install/)
+
+### Getting Started
+
+1. Clone this repository:
+   ```bash
+   git clone https://github.com/yourusername/MindNest.git
+   cd MindNest
+   ```
+
+2. Download the required LLM models:
+   - Place model files in the `models/` directory:
+     - For standard model: `Wizard-Vicuna-13B-Uncensored.Q4_K_M.gguf`
+     - For lightweight model: `llama-2-7b.Q4_K_M.gguf`
+
+3. Build and start the Docker container:
+   ```bash
+   ./run.sh docker:start
+   ```
+
+4. Access the application at http://localhost:8000
+
+### Modes and Options
+
+- **Application Mode**:
+  - Standard: Full features with LLM capabilities
+  - Lightweight: Vector search only
+
+- **Model Options**:
+  - Standard: Wizard-Vicuna-13B (larger, more powerful)
+  - Lightweight: Llama-2-7B (faster, less memory intensive)
+
+### Stopping the Application
+
 ```bash
-python -m venv venv
-source venv/bin/activate  # On Unix/Mac
-# or
-venv\Scripts\activate     # On Windows
+./run.sh docker:stop
 ```
 
-2. Install dependencies:
-```bash
-pip install -r requirements.txt
-# Or use the launcher's auto-install feature:
-python mindnest_launcher.py --install-deps
-```
+## Manual Installation
 
-3. Download the LLM model:
-   - Place your LLM model file (e.g., `llama-2-7b.Q4_K_M.gguf`) in the `models/` directory
-   - You can use different model sizes based on your hardware capabilities
-   - MindNest supports switching between models via the UI (see `release_notes/model_switching.md`)
+If you prefer to run without Docker:
 
-4. Configure the application:
-   - Copy `env.example` to `.env` and adjust settings as needed
-   - Environment variables override default configuration
-   - **Note:** If upgrading from a previous version, see `release_notes/environment_update.md` for important configuration changes
+1. Install dependencies:
+   ```bash
+   pip install -r requirements.txt
+   ```
 
+<<<<<<< Updated upstream
 5. Run the application (multiple options available):
    - **Python Launcher**: `python mindnest_launcher.py` (see `release_notes/launcher_guide.md` for options)
    - **Shell Script**: `./run.sh start` (Unix/Mac) or use Docker commands with `./run.sh docker:start`
    - **Direct Run**: `python run_direct.py` with optional arguments like `--lightweight-model`
    - **Manual Start**: `python main.py` (full mode) or `python run_server.py` (lightweight mode)
+=======
+2. Place model files in the `models/` directory
+>>>>>>> Stashed changes
 
-### Docker Setup
+3. Run the application directly:
+   ```bash
+   # Standard mode
+   ./run.sh start
+   
+   # Lightweight mode
+   ./run.sh start:light
+   
+   # With additional options
+   ./run.sh start --lightweight-model --no-browser
+   ```
 
+<<<<<<< Updated upstream
 For Docker deployment, there are several options:
 
 1. Using `docker-compose.yml`:
@@ -71,11 +116,28 @@ docker-compose up -d
 ```
 
 3. For detailed instructions and optimized Colima setup for macOS, see [docker-setup.md](docker-setup.md).
+=======
+4. Access the application at http://localhost:8000
+
+## Troubleshooting
+
+If you encounter issues:
+
+1. Check the logs:
+   ```bash
+   docker-compose logs -f
+   ```
+
+2. Ensure model files are correctly placed in the `models/` directory
+
+3. For dependency conflicts in non-Docker setup, try using Python 3.10 with a fresh virtual environment
+>>>>>>> Stashed changes
 
 ## Project Structure
 
 ```
 MindNest/
+<<<<<<< Updated upstream
 ├── docs/                       # Documentation and code examples
 │   ├── java/                   # Java code examples
 │   ├── groovy/                 # Groovy code examples
@@ -128,6 +190,33 @@ MindNest/
 ├── basic_app_with_docs.py      # Legacy application (deprecated)
 ├── test_docs.py                # Old test script (deprecated)
 └── README.md                   # This file
+=======
+├── docs/                 # Documentation and code examples
+│   ├── java/            # Java code examples
+│   ├── groovy/          # Groovy code examples
+│   ├── py/              # Python code examples
+│   └── txt/             # Text documentation
+├── models/              # AI model files
+├── static/              # Static web files
+├── utils/               # Utility modules
+│   ├── config.py        # Configuration management
+│   ├── document_processor.py  # Document processing
+│   ├── document_tracker.py    # Document change tracking
+│   ├── incremental_vectorstore.py  # Vector database management
+│   ├── llm_manager.py   # LLM initialization and management
+│   ├── logger.py        # Logging system
+│   ├── models.py        # Data models
+│   ├── query_cache.py   # Query caching
+│   └── query_optimization.py  # Query classification and optimization
+├── release_notes/       # Version release notes and documentation
+├── run_direct.py        # Direct runner for the application
+├── main.py              # Main application with LLM
+├── run_server.py        # Lightweight server (vector search only)
+├── requirements.txt     # Python dependencies
+├── env.example          # Example environment variables
+├── Dockerfile           # Docker configuration
+└── README.md            # This file
+>>>>>>> Stashed changes
 ```
 
 ## Usage
@@ -138,6 +227,7 @@ MindNest/
    - Supported formats: `.java`, `.groovy`, `.py`, `.js`, `.ts`, `.txt`, `.md`
    - Organize in subdirectories if desired
 
+<<<<<<< Updated upstream
 2. Start the server using one of the launcher options:
    ```bash
    # Standard launcher
@@ -151,6 +241,24 @@ MindNest/
    
    # Docker container
    ./run.sh docker:start
+=======
+2. Start the server:
+   ```bash
+   # Full mode with direct runner
+   python run_direct.py
+   
+   # Lightweight mode
+   python run_direct.py --lightweight
+   
+   # Specify port and host
+   python run_direct.py --port 8080 --host 127.0.0.1
+   
+   # Use lightweight model
+   python run_direct.py --lightweight-model
+   
+   # Don't open browser automatically
+   python run_direct.py --no-browser
+>>>>>>> Stashed changes
    ```
 
 3. Access the web interface at `http://localhost:8000` (or port 8080 if using Docker)
@@ -262,4 +370,5 @@ Tests cover core functionality including:
 - [HuggingFace](https://huggingface.co/) for embedding models and transformers
 
 <!-- Screenshots removed until we have proper screenshots -->
+
 

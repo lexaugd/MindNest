@@ -1,0 +1,11 @@
+{
+  "content": "### 2. InfonodeWrapper\n\nWraps objects from the CD (Customer Data) system:\n\n```java\nclass InfonodeWrapper implements ObjectWrapper {\n  private Infonode node;\n  \n  InfonodeWrapper(Infonode node) {\n    this.node = node;\n  }\n  \n  boolean isPresent() {\n    return node != null;\n  }\n  \n  Object unwrap() {\n    return node;\n  }\n  \n  // Retrieve a property by name\n  ObjectWrapper get(String key) {\n    if (node == null) return new Empty();\n    try {\n      Object value = node.get(Attribute.getInstance(key));\n      return WrapperFactory.wrap(value);\n    } catch (Exception e) {\n      return new Empty();\n    }\n  }\n  \n  // Get all keys available on this node\n  Set<String> getKeys() {\n    if (node == null) return Collections.emptySet();\n    return Arrays.stream(node.getBoundAttributeNames())\n      .map(name -> name.toString())\n      .collect(Collectors.toSet());\n  }\n  \n  // Type conversion methods\n  // ...\n}\n```\n\n### 3. MapWrapper / MapEntryWrapper",
+  "metadata": {
+    "source": "docs/md/03_Object_Wrappers.md",
+    "relative_path": "docs/md/03_Object_Wrappers.md",
+    "filename": "03_Object_Wrappers.md",
+    "filetype": "md",
+    "chunk_index": 4,
+    "total_chunks": 24
+  }
+}
