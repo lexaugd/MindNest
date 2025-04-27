@@ -86,15 +86,27 @@ Multiple ways to start the application:
 A key feature is intelligent context window optimization:
 
 1. **How It Works**:
-   - Adjusts document context based on model capabilities
-   - Small models get more aggressive truncation (1536 char limit)
-   - Large models get balanced truncation (3072 char limit)
-   - Preserves metadata regardless of truncation
+   - Uses token-aware document compression instead of simple character truncation
+   - Prioritizes document chunks based on query relevance
+   - Small models get more aggressive optimization (prioritizes most relevant content)
+   - Large models get balanced optimization (preserves document diversity)
+   - Preserves metadata regardless of compression technique
 
 2. **Model-Aware Processing**:
    - Different document limits for small vs. large models
    - Adjusted prompt templates for each model size
    - Retrieval strategies optimized for model context size
+
+3. **Query-Aware Relevance Scoring**:
+   - Uses embeddings to calculate semantic similarity between query and documents
+   - Prioritizes most relevant documents when context needs to be reduced
+   - Falls back to keyword matching when embeddings are unavailable
+   - Ensures the most important information for the query is preserved
+
+4. **Advanced Token Management**:
+   - Tracks token usage instead of character count for precise context fitting
+   - Uses tiktoken for accurate token counting with model-specific encodings
+   - Includes fallback mechanisms for environments where tiktoken is unavailable
 
 ## Installation & Setup
 
