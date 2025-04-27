@@ -1,0 +1,11 @@
+{
+  "content": "Use the overloaded conversion methods with defaults for critical values:\n\n```groovy\n// Good\nint quantity = item.get(\"quantity\").asInteger(0);  // Default to 0 if missing\nBigDecimal price = item.get(\"price\").asDecimal(BigDecimal.ZERO);  // Default to 0 if missing\n\n// Avoid\nint quantity = item.get(\"quantity\").asInteger();  // Could be null\nBigDecimal price = item.get(\"price\").asDecimal();  // Could be null\n```\n\n### 3. Chain Property Access Safely\n\nTake advantage of the null-safe property chaining:\n\n```groovy\n// Good\nString city = customer.get(\"address\").get(\"city\").asString();\n\n// Avoid\nif (customer.isPresent()) {\n  ObjectWrapper address = customer.get(\"address\");\n  if (address.isPresent()) {\n    city = address.get(\"city\").asString();\n  }\n}\n```\n\n### 4. Return Empty Collections Instead of Null\n\nWhen implementing wrappers, always return empty collections rather than null:\n\n```groovy\n// Good\nSet<String> getKeys() {\n  if (map == null) return Collections.emptySet();\n  return map.keySet();\n}",
+  "metadata": {
+    "source": "docs/md/03_Object_Wrappers.md",
+    "relative_path": "docs/md/03_Object_Wrappers.md",
+    "filename": "03_Object_Wrappers.md",
+    "filetype": "md",
+    "chunk_index": 22,
+    "total_chunks": 24
+  }
+}

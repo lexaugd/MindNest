@@ -1,0 +1,11 @@
+{
+  "content": "```java\npublic class WrapperFactory {\n  public static ObjectWrapper wrap(Object object) {\n    if (object == null) {\n      return new Empty();\n    } else if (object instanceof Infonode) {\n      return new InfonodeWrapper((Infonode) object);\n    } else if (object instanceof Map) {\n      return new MapWrapper((Map<String, Object>) object);\n    } else if (object instanceof List) {\n      return new ListWrapper((List<?>) object);\n    } else if (object instanceof String || object instanceof Number || object instanceof Boolean) {\n      return new Constant(object);\n    } else {\n      // For regular Java beans or other objects\n      return new BeanWrapper(object);\n    }\n  }\n}\n```\n\n## Special Purpose Wrappers\n\n### 1. ExtensionWrapper (CD System)\n\nProvides access to CD system extensions:",
+  "metadata": {
+    "source": "docs/md/03_Object_Wrappers.md",
+    "relative_path": "docs/md/03_Object_Wrappers.md",
+    "filename": "03_Object_Wrappers.md",
+    "filetype": "md",
+    "chunk_index": 9,
+    "total_chunks": 24
+  }
+}

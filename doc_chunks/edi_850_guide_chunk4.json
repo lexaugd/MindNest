@@ -1,0 +1,11 @@
+{
+  "content": "## Example\n\n```\nST*850*0001\nBEG*00*NE*12345678*20220315**20220315\nREF*CO*12345\nREF*VN*98765\nDTM*002*20220330\nN1*BY*ACME CORPORATION*92*1234\nN3*123 MAIN STREET\nN4*ANYTOWN*CA*90001\nN1*ST*ACME WAREHOUSE*92*5678\nN3*456 DOCK STREET\nN4*ANYTOWN*CA*90002\nPO1*1*10*EA*49.95**PN*ABC123*VN*987654\nPID*F****HIGH QUALITY WIDGET\nPO1*2*5*EA*29.95**PN*DEF456*VN*765432\nPID*F****STANDARD WIDGET\nCTT*2*15\nSE*17*0001\n```\n\n## Implementation Notes\n\n### Trading Partner Requirements\n\nBefore implementing the 850 Purchase Order, discuss these requirements with your trading partner:\n\n1. **Required Segments**: Determine which segments and elements are mandatory, optional, or unused\n2. **Qualifiers**: Agree on valid code values and qualifiers\n3. **Testing Process**: Establish a testing protocol before moving to production\n4. **Acknowledgments**: Decide if 997 Functional Acknowledgments are required\n5. **Error Handling**: Determine how errors will be communicated and resolved\n\n### Common Challenges",
+  "metadata": {
+    "source": "docs/edi/edi_850_guide.md",
+    "relative_path": "docs/edi/edi_850_guide.md",
+    "filename": "edi_850_guide.md",
+    "filetype": "md",
+    "chunk_index": 3,
+    "total_chunks": 6
+  }
+}

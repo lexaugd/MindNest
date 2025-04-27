@@ -1,0 +1,11 @@
+{
+  "content": "* System Orchestrator: Defines and integrates the required data\n  application activities into an operational vertical system (see\n  @sec:system-orchestrator-requirements);\n* Data Provider: Introduces new data or information feeds into the Big\n  Data system (see @sec:data-provider-requirements);\n* Data Consumer: Includes end users or other systems that use the\n  results of the Big Data Application Provider (see @sec:data-consumer-requirements);\n* Big Data Application Provider: Executes a data life cycle to meet\n  security and privacy requirements as well as System\n  Orchestrator-defined requirements (see @sec:data-application-requirements);\n* Big Data Framework Provider: Establishes a computing framework in\n  which to execute certain transformation applications while\n  protecting the privacy and integrity of data (see @sec:provider-requirements);\n  and\n* Big Data Application Provider to Framework Provider Interface:\n  Defines an interface between the application specification and the",
+  "metadata": {
+    "source": "docs/edi/edi_introduction-component-specific-interface-requirements.md",
+    "relative_path": "docs/edi/edi_introduction-component-specific-interface-requirements.md",
+    "filename": "edi_introduction-component-specific-interface-requirements.md",
+    "filetype": "md",
+    "chunk_index": 1,
+    "total_chunks": 24
+  }
+}

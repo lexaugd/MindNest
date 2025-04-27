@@ -1,0 +1,11 @@
+{
+  "content": "On June 19, 2013, the NIST Big Data Public Working Group (NBD-PWG) was\nlaunched with extensive participation by industry, academia, and\ngovernment from across the nation. The scope of the NBD-PWG involves\nforming a community of interests from all sectors---including industry,\nacademia, and government---with the goal of developing consensus on\ndefinitions, taxonomies, secure reference architectures, security and\nprivacy, and, from these, a standards roadmap. Such a consensus would\ncreate a vendor-neutral, technology- and infrastructure-independent\nframework that would enable Big Data stakeholders to identify and use\nthe best analytics tools for their processing and visualization\nrequirements on the most suitable computing platform and cluster, while\nalso allowing added value from Big Data service providers.",
+  "metadata": {
+    "source": "docs/edi/edi_introduction-background.md",
+    "relative_path": "docs/edi/edi_introduction-background.md",
+    "filename": "edi_introduction-background.md",
+    "filetype": "md",
+    "chunk_index": 6,
+    "total_chunks": 10
+  }
+}

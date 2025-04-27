@@ -1,0 +1,11 @@
+{
+  "content": "## Compute Management - Virtual Machines\n\nThis section summarizes a basic interface specification of virtual machines.\n\n\n### Image {#sec:spec-image}\n\n{include=./spec/image.md}\n\n#### image.yaml\n\n```{include=./spec/image.yaml}\n```\n### Flavor {#sec:spec-flavor}\n\n{include=./spec/flavor.md}\n\n#### flavor.yaml\n\n```{include=./spec/flavor.yaml}\n```\n\n### Virtual Machine {#sec:spec-vm}\n\n{include=./spec/vm.md}\n\n#### vm.yaml\n\n```{include=./spec/vm.yaml}\n```\n\n### Secgroup\u00a0{#sec:spec-secgroup}\n\n{include=./spec/secgroup.md}\n\n#### secgroup.yaml\n\n```{include=./spec/secgroup.yaml}\n```\n\n### Nic {#sec:spec-nic}\n\n{include=./spec/nic.md}\n\n#### nic.yaml\n\n```{include=./spec/nic.yaml}\n```",
+  "metadata": {
+    "source": "docs/edi/edi_introduction-compute-management-virtual-machines.md",
+    "relative_path": "docs/edi/edi_introduction-compute-management-virtual-machines.md",
+    "filename": "edi_introduction-compute-management-virtual-machines.md",
+    "filetype": "md",
+    "chunk_index": 0,
+    "total_chunks": 1
+  }
+}

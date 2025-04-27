@@ -1,0 +1,11 @@
+{
+  "content": "### Support of Plug-In Compute Infrastructure\n\nAs Big Data is not just about hosting data, but about analyzing data,\nthe interfaces provided herein must encapsulate a rich infrastructure\nenvironment that is used by data scientists. This includes the ability\nto integrate (or plug-in) various compute resources and services to\nprovide the necessary compute power to analyze the data. These\nresources and services include the following:\n\n* Access to hierarchy of compute resources from the laptop/desktop,\n  servers, data clusters, and clouds;\n* The ability to integrate special-purpose hardware such as graphics\n  processing units (GPUs) and field-programmable gate arrays (FPGAs)\n  that are used in accelerated analysis of data; and\n* The integration of services including microservices that allow the\n  analysis of the data by delegating them to hosted or dynamically\n  deployed services on the infrastructure of choice.\n\n### Orchestration of Infrastructure and Services",
+  "metadata": {
+    "source": "docs/edi/edi_introduction-high-level-requirements-of-the-interface-approach.md",
+    "relative_path": "docs/edi/edi_introduction-high-level-requirements-of-the-interface-approach.md",
+    "filename": "edi_introduction-high-level-requirements-of-the-interface-approach.md",
+    "filetype": "md",
+    "chunk_index": 1,
+    "total_chunks": 11
+  }
+}

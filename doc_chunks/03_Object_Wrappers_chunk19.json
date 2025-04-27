@@ -1,0 +1,11 @@
+{
+  "content": "### 4. Collection Processing\n\n```groovy\n// Iterate over wrapped collections\nListWrapper items = order.get(\"items\").asList();\nitems.forEach(item -> {\n  // Process each item with type safety\n  String sku = item.get(\"sku\").asString();\n  int qty = item.get(\"quantity\").asInteger(0);\n  BigDecimal price = item.get(\"price\").asDecimal(BigDecimal.ZERO);\n  BigDecimal total = price.multiply(new BigDecimal(qty));\n  \n  // Business logic...\n});\n```\n\n### 5. Null-Safe Transformations\n\n```groovy\n// Transform data with null safety\nList<String> skus = new ArrayList<>();\norder.get(\"items\").asList().forEach(item -> {\n  String sku = item.get(\"sku\").asString();\n  if (!sku.isEmpty()) {\n    skus.add(sku);\n  }\n});\n```\n\n## Implementation Patterns\n\n### 1. Chain of Responsibility\n\nWrappers often use a chain of responsibility pattern to delegate operations:",
+  "metadata": {
+    "source": "docs/md/03_Object_Wrappers.md",
+    "relative_path": "docs/md/03_Object_Wrappers.md",
+    "filename": "03_Object_Wrappers.md",
+    "filetype": "md",
+    "chunk_index": 18,
+    "total_chunks": 24
+  }
+}

@@ -1,0 +1,11 @@
+{
+  "content": "### Execution Workloads\n\nOne of the important aspects of distributed Big Data services can be\nthat the data served is simply too big to be moved to a different\nlocation. Instead, an interface could allow the description and\npackaging of analytics algorithms, and potentially also tools, as a\npayload to a data service. This can be best achieved, not by sending the\ndetailed execution, but by sending an interface description that\ndescribes how such an algorithm or tool can be created on the server and\nbe executed under security considerations (integrated with\nauthentication and authorization in mind).\n\n### Security and Privacy Fabric Requirements",
+  "metadata": {
+    "source": "docs/edi/edi_introduction-high-level-requirements-of-the-interface-approach.md",
+    "relative_path": "docs/edi/edi_introduction-high-level-requirements-of-the-interface-approach.md",
+    "filename": "edi_introduction-high-level-requirements-of-the-interface-approach.md",
+    "filetype": "md",
+    "chunk_index": 8,
+    "total_chunks": 11
+  }
+}

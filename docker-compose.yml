@@ -1,0 +1,17 @@
+services:
+  mindnest:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - "8080:8000"  # MindNest server port
+    volumes:
+      - ./models:/app/models  # Mount models directory
+      - ./docs:/app/docs  # Mount docs directory
+      - ./logs:/app/logs  # Mount logs directory
+    environment:
+      - HOST=0.0.0.0
+      - PORT=8000
+      - USE_SMALL_MODEL=true
+      - MINDNEST_MODE=lightweight
+    restart: unless-stopped 

@@ -1,0 +1,11 @@
+{
+  "content": "### 4. ListWrapper\n\nWraps List objects for uniform iteration and access:\n\n```java\nclass ListWrapper implements ObjectWrapper {\n  private List<ObjectWrapper> items;\n  \n  ListWrapper(List<?> list) {\n    if (list == null) {\n      this.items = Collections.emptyList();\n    } else {\n      this.items = list.stream()\n        .map(WrapperFactory::wrap)\n        .collect(Collectors.toList());\n    }\n  }\n  \n  boolean isPresent() {\n    return items != null && !items.isEmpty();\n  }\n  \n  Object unwrap() {\n    return items.stream()\n      .map(ObjectWrapper::unwrap)\n      .collect(Collectors.toList());\n  }\n  \n  int size() {\n    return items.size();\n  }\n  \n  ObjectWrapper get(int index) {\n    if (index < 0 || index >= items.size()) {\n      return new Empty();\n    }\n    return items.get(index);\n  }\n  \n  void forEach(Consumer<ObjectWrapper> consumer) {\n    items.forEach(consumer);\n  }\n  \n  // Other implementation methods\n  // ...\n}\n```\n\n### 5. PropertyWrapper",
+  "metadata": {
+    "source": "docs/md/03_Object_Wrappers.md",
+    "relative_path": "docs/md/03_Object_Wrappers.md",
+    "filename": "03_Object_Wrappers.md",
+    "filetype": "md",
+    "chunk_index": 6,
+    "total_chunks": 24
+  }
+}

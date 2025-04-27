@@ -1,0 +1,11 @@
+{
+  "content": "# NBDRA Interface Requirements {#sec:interface-requirements}\n\n\nThe development of a Big Data reference architecture requires a thorough\nunderstanding of current techniques, issues, and concerns. To this end,\nthe NBD-PWG collected use cases to gain an understanding of current\napplications of Big Data, conducted a survey of reference architectures\nto understand commonalities within Big Data architectures in use,\ndeveloped a taxonomy to understand and organize the information\ncollected, and reviewed existing technologies and trends relevant to Big\nData. The results of these NBD-PWG activities were used in the\ndevelopment of the NBDRA (@fig:arch) and the interfaces presented herein.\nDetailed descriptions of these activities can be found in the other\nvolumes of the *NBDIF*.\n\n![NIST Big Data Reference Architecture (NBDRA)](images/bdra.png){#fig:arch}",
+  "metadata": {
+    "source": "docs/edi/edi_introduction-nbdra-interface-requirements-secinterface-requirements.md",
+    "relative_path": "docs/edi/edi_introduction-nbdra-interface-requirements-secinterface-requirements.md",
+    "filename": "edi_introduction-nbdra-interface-requirements-secinterface-requirements.md",
+    "filetype": "md",
+    "chunk_index": 0,
+    "total_chunks": 5
+  }
+}

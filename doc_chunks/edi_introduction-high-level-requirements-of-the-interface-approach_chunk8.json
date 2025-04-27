@@ -1,0 +1,11 @@
+{
+  "content": "### Reusability\n\nThe interfaces provided must encourage reusability of the\ninfrastructure, services, and experiments described by them. This\nincludes (1) reusability of available analytics packages and services\nfor adoption; (2) deployment of customizable analytics tools and\nservices; and (3) operational adjustments that allow the services and\ninfrastructure to be adapted while at the same time allowing for\nreproducible experiment execution.\n\n### Execution Workloads",
+  "metadata": {
+    "source": "docs/edi/edi_introduction-high-level-requirements-of-the-interface-approach.md",
+    "relative_path": "docs/edi/edi_introduction-high-level-requirements-of-the-interface-approach.md",
+    "filename": "edi_introduction-high-level-requirements-of-the-interface-approach.md",
+    "filetype": "md",
+    "chunk_index": 7,
+    "total_chunks": 11
+  }
+}

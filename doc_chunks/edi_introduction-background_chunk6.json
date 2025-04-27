@@ -1,0 +1,11 @@
+{
+  "content": "Motivated by the White House initiative and public suggestions, the\nNational Institute of Standards and Technology (NIST) accepted the\nchallenge to stimulate collaboration among industry professionals to\nfurther the secure and effective adoption of Big Data. As a result of\nNIST's Cloud and Big Data Forum held on January 15--17, 2013, there was\nstrong encouragement for NIST to create a public working group for the\ndevelopment of a Big Data Standards Roadmap. Forum participants noted\nthat this roadmap should define and prioritize Big Data requirements,\nincluding interoperability, portability, reusability, extensibility,\ndata usage, analytics, and technology infrastructure. In doing so, the\nroadmap would accelerate the adoption of the most secure and effective\nBig Data techniques and technology.",
+  "metadata": {
+    "source": "docs/edi/edi_introduction-background.md",
+    "relative_path": "docs/edi/edi_introduction-background.md",
+    "filename": "edi_introduction-background.md",
+    "filetype": "md",
+    "chunk_index": 5,
+    "total_chunks": 10
+  }
+}

@@ -1,0 +1,11 @@
+{
+  "content": "## Hybrid and Multiple Frameworks\n\nTo avoid vendor lock-in, Big Data systems must be able to deal with\nhybrid and multiple frameworks. This is not only true for Clouds,\ncontainers, DevOps, but also for components of the NBDRA.",
+  "metadata": {
+    "source": "docs/edi/edi_introduction-hybrid-and-multiple-frameworks.md",
+    "relative_path": "docs/edi/edi_introduction-hybrid-and-multiple-frameworks.md",
+    "filename": "edi_introduction-hybrid-and-multiple-frameworks.md",
+    "filetype": "md",
+    "chunk_index": 0,
+    "total_chunks": 1
+  }
+}

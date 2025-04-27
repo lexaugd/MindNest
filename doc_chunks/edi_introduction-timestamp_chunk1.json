@@ -1,0 +1,11 @@
+{
+  "content": "## Timestamp\n\nTimestamps can be used in conjunction with andy server side implementation of\nthe interfaces. It can be useful to return information about when a \nparticular resource has been created, updated, or accessed. To simplify the \nspecification in the document we have not explicitly listed that a timestamp \nis part of the reource, but we can assume it may be added as part of the \nservice implementation. To obtain an example timestamp a simple get function \nis provided. \n\n\n### Timestamp {#sec:spec-timestamp}\n\n{include=./spec/timestamp.md}\n\n#### timestamp.yaml\n\n\n```{include=./spec/timestamp.yaml}\n```",
+  "metadata": {
+    "source": "docs/edi/edi_introduction-timestamp.md",
+    "relative_path": "docs/edi/edi_introduction-timestamp.md",
+    "filename": "edi_introduction-timestamp.md",
+    "filetype": "md",
+    "chunk_index": 0,
+    "total_chunks": 1
+  }
+}

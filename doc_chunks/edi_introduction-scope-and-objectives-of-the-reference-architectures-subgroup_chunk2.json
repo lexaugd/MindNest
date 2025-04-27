@@ -1,0 +1,11 @@
+{
+  "content": "* Provides a common language for the various stakeholders;\n* Encourages adherence to common standards, specifications, and\n   patterns;\n* Provides consistent methods for implementation of technology to\n  solve similar problem sets;\n* Illustrates and improves understanding of the various Big Data\n  components, processes, and systems, in the context of a vendor- and\n  technology-agnostic Big Data conceptual model;\n* Provides a technical reference for U.S. government departments,\n  agencies, and other consumers to understand, discuss, categorize,\n  and compare Big Data solutions; and\n* Facilitates analysis of candidate standards for interoperability,\n  portability, reusability, and extendibility.",
+  "metadata": {
+    "source": "docs/edi/edi_introduction-scope-and-objectives-of-the-reference-architectures-subgroup.md",
+    "relative_path": "docs/edi/edi_introduction-scope-and-objectives-of-the-reference-architectures-subgroup.md",
+    "filename": "edi_introduction-scope-and-objectives-of-the-reference-architectures-subgroup.md",
+    "filetype": "md",
+    "chunk_index": 1,
+    "total_chunks": 4
+  }
+}

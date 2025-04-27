@@ -1,0 +1,11 @@
+{
+  "content": "## Related Documents\n\n- **855 Purchase Order Acknowledgment**: Seller's response to the 850 Purchase Order\n- **860 Purchase Order Change Request**: Buyer's request to change an existing PO\n- **865 Purchase Order Change Acknowledgment**: Seller's response to the 860\n- **870 Order Status Report**: Status update on a purchase order",
+  "metadata": {
+    "source": "docs/edi/edi_850_guide.md",
+    "relative_path": "docs/edi/edi_850_guide.md",
+    "filename": "edi_850_guide.md",
+    "filetype": "md",
+    "chunk_index": 5,
+    "total_chunks": 6
+  }
+}

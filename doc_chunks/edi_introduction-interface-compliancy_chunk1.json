@@ -1,0 +1,11 @@
+{
+  "content": "## Interface Compliancy\n\nDue to the easy extensibility of the resource objects specified in this \ndocument and their interfaces, it is important to introduce a \nterminology that allows the definition of interface compliancy. We define\nthree levels of interface compliance as follows:\n\n* **Full Compliance:** These are reference implementations that provide\n  full compliance to the objects defined in this document. A version\n  number is added to assure that the snapshot in time of the\n  objects is associated with the version. A full complient framework \n  implements all objects.",
+  "metadata": {
+    "source": "docs/edi/edi_introduction-interface-compliancy.md",
+    "relative_path": "docs/edi/edi_introduction-interface-compliancy.md",
+    "filename": "edi_introduction-interface-compliancy.md",
+    "filetype": "md",
+    "chunk_index": 0,
+    "total_chunks": 2
+  }
+}

@@ -1,0 +1,11 @@
+{
+  "content": "#### Crosscutting Interface Requirements\n\nSeveral crosscutting interface requirements within the Big Data\nFramework Provider include messaging, communication, and resource\nmanagement. Often these services may be hidden from explicit interface\nuse as they are part of larger systems that expose higher-level\nfunctionality through their interfaces. However, such interfaces may\nalso be exposed on a lower level in case finer-grained control is\nneeded. The need for such crosscutting interface requirements will be\nextracted from the *NBDIF: Volume 3, Use Cases and General Requirements*\ndocument.\n\n#### Messaging/Communications Frameworks\n\nMessaging and communications frameworks have their roots in the High\nPerformance Computing environments long popular in the scientific and\nresearch communities. Messaging/Communications Frameworks were developed\nto provide application programming interfaces (APIs) for the reliable\nqueuing, transmission, and receipt of data.",
+  "metadata": {
+    "source": "docs/edi/edi_introduction-component-specific-interface-requirements.md",
+    "relative_path": "docs/edi/edi_introduction-component-specific-interface-requirements.md",
+    "filename": "edi_introduction-component-specific-interface-requirements.md",
+    "filetype": "md",
+    "chunk_index": 21,
+    "total_chunks": 24
+  }
+}

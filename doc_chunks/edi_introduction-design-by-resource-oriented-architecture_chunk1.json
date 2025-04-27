@@ -1,0 +1,11 @@
+{
+  "content": "## Design by Resource-Oriented Architecture\n\nA resource-oriented architecture represents a software architecture\nand programming paradigm for designing and developing software in the\nform of resources. It is often associated with *REpresentational State\nTransfer (REST)* interfaces. The resources are software components\nwhich can be reused in concrete reference implementations. The service\nspecification is conducted with OpenAPI, allowing use to provide it in\na very general form that is independent of the framework or computer\nlanguage in which the services can be specified.  Note that OpenAPI\ndefines services in REST The previous version only specified the\nresource objects.",
+  "metadata": {
+    "source": "docs/edi/edi_introduction-design-by-resource-oriented-architecture.md",
+    "relative_path": "docs/edi/edi_introduction-design-by-resource-oriented-architecture.md",
+    "filename": "edi_introduction-design-by-resource-oriented-architecture.md",
+    "filetype": "md",
+    "chunk_index": 0,
+    "total_chunks": 1
+  }
+}

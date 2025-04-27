@@ -1,0 +1,11 @@
+{
+  "content": "## Compute Management - Map Reduce\n\n\n### Map Reduce {#sec:spec-mapreduce}\n\n{include=./spec/mapreduce.md}\n\n#### mapreduce.yaml\n\n```{include=./spec/mapreduce.yaml}\n```",
+  "metadata": {
+    "source": "docs/edi/edi_introduction-compute-management-map-reduce.md",
+    "relative_path": "docs/edi/edi_introduction-compute-management-map-reduce.md",
+    "filename": "edi_introduction-compute-management-map-reduce.md",
+    "filetype": "md",
+    "chunk_index": 0,
+    "total_chunks": 1
+  }
+}

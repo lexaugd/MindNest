@@ -1,0 +1,11 @@
+{
+  "content": "### 2. Null Object Pattern\n\nThe Empty wrapper is an implementation of the Null Object pattern:\n\n```groovy\nclass Empty implements ObjectWrapper {\n  // Always indicate not present\n  boolean isPresent() {\n    return false;\n  }\n  \n  // Return safe default values\n  String asString() { return \"\"; }\n  Integer asInteger() { return null; }\n  BigDecimal asDecimal() { return null; }\n  Boolean asBoolean() { return false; }\n  Date asDate() { return null; }\n  ListWrapper asList() { return new ListWrapper(Collections.emptyList()); }\n  MapWrapper asMap() { return new MapWrapper(Collections.emptyMap()); }\n  \n  // Other methods...\n}\n```\n\n### 3. Factory Method Pattern\n\nThe WrapperFactory uses the Factory Method pattern to create appropriate wrappers:",
+  "metadata": {
+    "source": "docs/md/03_Object_Wrappers.md",
+    "relative_path": "docs/md/03_Object_Wrappers.md",
+    "filename": "03_Object_Wrappers.md",
+    "filetype": "md",
+    "chunk_index": 20,
+    "total_chunks": 24
+  }
+}

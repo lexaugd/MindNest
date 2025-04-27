@@ -1,309 +1,251 @@
-import json
+"""
+Advanced cache for query results to improve response times.
+Provides both in-memory LRU cache and disk persistence.
+"""
+
 import os
+import json
 import time
-from typing import Dict, List, Any, Optional, Tuple
-from functools import lru_cache
-from datetime import datetime, timedelta
+import hashlib
+from typing import Dict, List, Any, Optional, Union
+from collections import OrderedDict
+
+from utils.config import config
+from utils.logger import get_logger
+
+# Get module logger
+logger = get_logger(__name__)
 
 class QueryCache:
     """
-    Implements a caching mechanism for document queries to improve response time.
-    Both memory-based (LRU) and disk-based caching are supported.
+    Advanced cache for storing query results with both memory and disk caching.
+    Implements LRU (Least Recently Used) for memory caching.
     """
     
     def __init__(
-        self, 
-        cache_file: str = "utils/query_cache.json",
-        max_memory_items: int = 100,
-        max_disk_items: int = 1000,
-        ttl_hours: float = 24.0
+        self,
+        max_memory_size: Optional[int] = None,
+        disk_cache_enabled: Optional[bool] = None,
+        disk_cache_path: Optional[str] = None
     ):
         """
-        Initialize the query cache.
+        Initialize cache with optional configuration.
         
         Args:
-            cache_file: File to store persistent cache
-            max_memory_items: Maximum number of items to keep in memory cache
-            max_disk_items: Maximum number of items to keep in disk cache 
-            ttl_hours: Time-to-live for cache entries in hours
+            max_memory_size: Maximum number of items in memory cache (default: from config)
+            disk_cache_enabled: Whether to enable disk caching (default: from config)
+            disk_cache_path: Path to disk cache file (default: from config)
         """
-        self.cache_file = cache_file
-        self.max_memory_items = max_memory_items
-        self.max_disk_items = max_disk_items
-        self.ttl_seconds = ttl_hours * 3600
+        # Use provided values or defaults from config
+        self.max_memory_size = max_memory_size if max_memory_size is not None else config.memory_cache_size
+        self.disk_cache_enabled = disk_cache_enabled if disk_cache_enabled is not None else config.disk_cache_enabled
+        self.disk_cache_path = disk_cache_path if disk_cache_path is not None else config.disk_cache_path
+        
+        # LRU cache using OrderedDict
+        self.cache = OrderedDict()
+        
+        # Disk cache
+        self.disk_cache = {}
         
         # Statistics
-        self.stats = {
-            "memory_hits": 0,
-            "disk_hits": 0,
-            "misses": 0,
-            "total_queries": 0
-        }
+        self.memory_hits = 0
+        self.disk_hits = 0
+        self.misses = 0
         
-        # Load disk cache if it exists
-        self.disk_cache = self._load_disk_cache()
-        
-        # Memory cache (simple dict for now)
-        self.memory_cache = {}
+        # Load disk cache if enabled
+        if self.disk_cache_enabled:
+            self._load_disk_cache()
     
-    def _load_disk_cache(self) -> Dict:
-        """Load the disk cache from file or create a new one."""
-        if os.path.exists(self.cache_file):
-            try:
-                with open(self.cache_file, 'r') as f:
-                    cache_data = json.load(f)
-                    # Perform cache cleanup on load
-                    self._clean_expired_entries(cache_data)
-                    return cache_data
-            except (json.JSONDecodeError, IOError) as e:
-                print(f"Error loading cache file: {e}. Creating new cache.")
-        
-        # Create cache structure if it doesn't exist or can't be loaded
-        return {
-            "metadata": {
-                "created": datetime.now().isoformat(),
-                "last_cleanup": datetime.now().isoformat()
-            },
-            "queries": {}
-        }
+    def _load_disk_cache(self) -> None:
+        """Load the disk cache from disk."""
+        if not os.path.exists(self.disk_cache_path):
+            return
+            
+        try:
+            with open(self.disk_cache_path, 'r') as f:
+                self.disk_cache = json.load(f)
+            logger.info(f"Loaded {len(self.disk_cache)} items from disk cache")
+        except (json.JSONDecodeError, IOError) as e:
+            logger.error(f"Error loading disk cache: {e}")
+            self.disk_cache = {}
     
     def _save_disk_cache(self) -> None:
-        """Save the disk cache to file."""
-        # Ensure directory exists
-        os.makedirs(os.path.dirname(self.cache_file), exist_ok=True)
-        
+        """Save the disk cache to disk."""
+        if not self.disk_cache_enabled:
+            return
+            
         try:
-            with open(self.cache_file, 'w') as f:
-                json.dump(self.disk_cache, f, indent=2)
+            # Create directory if it doesn't exist
+            os.makedirs(os.path.dirname(self.disk_cache_path), exist_ok=True)
+            
+            with open(self.disk_cache_path, 'w') as f:
+                json.dump(self.disk_cache, f)
+            logger.debug(f"Saved {len(self.disk_cache)} items to disk cache")
         except IOError as e:
-            print(f"Error saving cache file: {e}")
+            logger.error(f"Error saving disk cache: {e}")
     
-    def _clean_expired_entries(self, cache_data: Dict) -> None:
-        """Remove expired entries from the cache."""
-        now = time.time()
-        expired_keys = []
-        
-        for key, entry in cache_data["queries"].items():
-            # Check if the entry has expired
-            if entry["timestamp"] + self.ttl_seconds < now:
-                expired_keys.append(key)
-        
-        # Remove expired entries
-        for key in expired_keys:
-            del cache_data["queries"][key]
-        
-        # Update last cleanup timestamp
-        cache_data["metadata"]["last_cleanup"] = datetime.now().isoformat()
-        
-        # Trim cache if it exceeds max size
-        self._trim_cache_if_needed(cache_data)
+    def _hash_key(self, key: str) -> str:
+        """Create a hash of the key for disk storage."""
+        return hashlib.md5(key.encode('utf-8')).hexdigest()
     
-    def _trim_cache_if_needed(self, cache_data: Dict) -> None:
-        """Trim the cache if it exceeds the maximum size."""
-        if len(cache_data["queries"]) > self.max_disk_items:
-            # Sort entries by access time (oldest first)
-            sorted_entries = sorted(
-                cache_data["queries"].items(),
-                key=lambda x: x[1]["last_accessed"]
-            )
+    def __contains__(self, key: str) -> bool:
+        """Check if a key is in the cache (memory or disk)."""
+        # Check memory cache first
+        if key in self.cache:
+            return True
             
-            # Remove oldest entries until we're under the limit
-            entries_to_remove = len(cache_data["queries"]) - self.max_disk_items
-            for i in range(entries_to_remove):
-                if i < len(sorted_entries):
-                    del cache_data["queries"][sorted_entries[i][0]]
+        # Then check disk cache if enabled
+        if self.disk_cache_enabled:
+            hashed_key = self._hash_key(key)
+            return hashed_key in self.disk_cache
+            
+        return False
     
-    def _normalize_query(self, query: str, k: int = 3) -> str:
+    def get(self, key: str, default: Any = None, k: Optional[int] = None) -> Any:
         """
-        Normalize the query string to enable better cache hits.
+        Get a value from the cache.
         
         Args:
-            query: The query string
-            k: Number of results to retrieve
+            key: The cache key
+            default: Default value if key not found
+            k: Number of results (not used in retrieval, just for stats)
             
         Returns:
-            Normalized query string for cache lookup
+            The cached value or default
         """
-        # Basic normalization: lowercase, strip whitespace
-        normalized = query.lower().strip()
-        # Create a cache key that includes the k parameter
-        return f"{normalized}:{k}"
-    
-    def _trim_memory_cache_if_needed(self) -> None:
-        """Trim the memory cache if it exceeds the maximum size."""
-        if len(self.memory_cache) > self.max_memory_items:
-            # Sort entries by access time (oldest first)
-            sorted_entries = sorted(
-                self.memory_cache.items(),
-                key=lambda x: x[1]["last_accessed"]
-            )
+        # Check memory cache first
+        if key in self.cache:
+            # Update LRU order by moving to end
+            value = self.cache.pop(key)
+            self.cache[key] = value
+            self.memory_hits += 1
+            logger.debug(f"Memory cache hit: {key}")
+            return value
             
-            # Remove oldest entries until we're under the limit
-            entries_to_remove = len(self.memory_cache) - self.max_memory_items
-            for i in range(entries_to_remove):
-                if i < len(sorted_entries):
-                    del self.memory_cache[sorted_entries[i][0]]
-    
-    def get(self, query: str, k: int = 3) -> Optional[List[Dict]]:
-        """
-        Get a query result from cache.
-        
-        Args:
-            query: The query string
-            k: Number of results to retrieve
-            
-        Returns:
-            The cached query result or None if not found
-        """
-        self.stats["total_queries"] += 1
-        
-        # Normalize the query
-        normalized_query = self._normalize_query(query, k)
-        
-        # Try memory cache first
-        if normalized_query in self.memory_cache:
-            entry = self.memory_cache[normalized_query]
-            # Check if the entry has expired
-            if entry["timestamp"] + self.ttl_seconds >= time.time():
-                # Update access time
-                entry["last_accessed"] = time.time()
-                self.stats["memory_hits"] += 1
-                return entry["result"]
-            else:
-                # Remove expired entry from memory cache
-                del self.memory_cache[normalized_query]
-        
-        # Try disk cache
-        if normalized_query in self.disk_cache["queries"]:
-            entry = self.disk_cache["queries"][normalized_query]
-            
-            # Check if the entry has expired
-            if entry["timestamp"] + self.ttl_seconds >= time.time():
-                # Update access time
-                entry["last_accessed"] = time.time()
-                self._save_disk_cache()
+        # Check disk cache if enabled
+        if self.disk_cache_enabled:
+            hashed_key = self._hash_key(key)
+            if hashed_key in self.disk_cache:
+                # Load from disk cache and promote to memory cache
+                value = self.disk_cache[hashed_key]
                 
-                # Store in memory cache for future use
-                self.memory_cache[normalized_query] = {
-                    "result": entry["result"],
-                    "timestamp": entry["timestamp"],
-                    "last_accessed": time.time()
-                }
+                # Add to memory cache (which may trigger eviction)
+                self.set(key, value, k)
                 
-                # Trim memory cache if needed
-                self._trim_memory_cache_if_needed()
+                self.disk_hits += 1
+                logger.debug(f"Disk cache hit: {key}")
+                return value
                 
-                self.stats["disk_hits"] += 1
-                return entry["result"]
-            else:
-                # Remove expired entry from disk cache
-                del self.disk_cache["queries"][normalized_query]
-                self._save_disk_cache()
-        
         # Cache miss
-        self.stats["misses"] += 1
-        return None
+        self.misses += 1
+        logger.debug(f"Cache miss: {key}")
+        return default
     
-    def set(self, query: str, result: List[Dict], k: int = 3) -> None:
+    def set(self, key: str, value: Any, k: Optional[int] = None) -> None:
         """
-        Store a query result in cache.
+        Set a value in the cache.
         
         Args:
-            query: The query string
-            result: The query result to cache
-            k: Number of results that were retrieved
+            key: The cache key
+            value: The value to cache
+            k: Number of results (not used in storage, just for stats)
         """
-        # Normalize the query
-        normalized_query = self._normalize_query(query, k)
-        now = time.time()
+        # Check if key already exists in memory cache
+        if key in self.cache:
+            # Remove existing entry
+            self.cache.pop(key)
+            
+        # Add to memory cache
+        self.cache[key] = value
         
-        # Store in memory cache
-        self.memory_cache[normalized_query] = {
-            "result": result,
-            "timestamp": now,
-            "last_accessed": now
-        }
-        
-        # Trim memory cache if needed
-        self._trim_memory_cache_if_needed()
-        
-        # Store in disk cache
-        self.disk_cache["queries"][normalized_query] = {
-            "result": result,
-            "timestamp": now,
-            "last_accessed": now
-        }
-        
-        # Save disk cache
-        self._save_disk_cache()
-        
-        # Perform cleanup periodically
-        last_cleanup = datetime.fromisoformat(self.disk_cache["metadata"]["last_cleanup"])
-        if datetime.now() - last_cleanup > timedelta(hours=1):
-            self._clean_expired_entries(self.disk_cache)
-            self._save_disk_cache()
+        # Evict if memory cache is full
+        if len(self.cache) > self.max_memory_size:
+            # LRU eviction: remove oldest item
+            oldest_key, oldest_value = self.cache.popitem(last=False)
+            logger.debug(f"LRU eviction of key: {oldest_key}")
+            
+            # Store evicted item in disk cache if enabled
+            if self.disk_cache_enabled:
+                hashed_key = self._hash_key(oldest_key)
+                self.disk_cache[hashed_key] = oldest_value
+                # Periodically save disk cache
+                if len(self.disk_cache) % 10 == 0:
+                    self._save_disk_cache()
+                
+        # Also store in disk cache if enabled
+        if self.disk_cache_enabled:
+            hashed_key = self._hash_key(key)
+            self.disk_cache[hashed_key] = value
+            
+            # Save disk cache every 10 writes to avoid excessive I/O
+            if len(self.disk_cache) % 10 == 0:
+                self._save_disk_cache()
     
     def clear(self) -> None:
-        """Clear all caches."""
+        """Clear both memory and disk caches."""
         # Clear memory cache
-        self.memory_cache = {}
+        self.cache.clear()
         
         # Clear disk cache
-        self.disk_cache["queries"] = {}
-        self.disk_cache["metadata"]["last_cleanup"] = datetime.now().isoformat()
-        self._save_disk_cache()
+        if self.disk_cache_enabled:
+            self.disk_cache.clear()
+            self._save_disk_cache()
+            
+        # Reset statistics
+        self.memory_hits = 0
+        self.disk_hits = 0
+        self.misses = 0
         
-        print("Query cache cleared")
+        logger.info("Query cache cleared")
     
     def get_stats(self) -> Dict[str, Any]:
         """Get cache statistics."""
-        # Update cache sizes for accurate reporting
-        memory_size = len(self.memory_cache)
-        disk_size = len(self.disk_cache["queries"])
+        total_queries = self.memory_hits + self.disk_hits + self.misses
+        hit_rate = ((self.memory_hits + self.disk_hits) / total_queries * 100) if total_queries > 0 else 0
         
-        total = self.stats["total_queries"]
-        hit_rate = 0
-        if total > 0:
-            hit_rate = (self.stats["memory_hits"] + self.stats["disk_hits"]) / total * 100
-            
         return {
-            "memory_hits": self.stats["memory_hits"],
-            "disk_hits": self.stats["disk_hits"],
-            "misses": self.stats["misses"],
-            "total_queries": total,
+            "memory_hits": self.memory_hits,
+            "disk_hits": self.disk_hits,
+            "misses": self.misses,
+            "total_queries": total_queries,
             "hit_rate_percent": round(hit_rate, 2),
-            "memory_cache_size": memory_size,
-            "disk_cache_size": disk_size,
-            "memory_max_size": self.max_memory_items,
-            "disk_max_size": self.max_disk_items,
-            "ttl_hours": self.ttl_seconds / 3600
+            "memory_cache_size": len(self.cache),
+            "memory_max_size": self.max_memory_size,
+            "disk_cache_size": len(self.disk_cache),
+            "disk_cache_enabled": self.disk_cache_enabled
         }
 
 
 # For testing purposes
 if __name__ == "__main__":
-    # Create a new cache
-    cache = QueryCache()
+    # Create a new cache with small memory size to test eviction
+    cache = QueryCache(max_memory_size=3)
     
     # Test storing and retrieving items
-    test_query = "What is a document store?"
-    test_result = [
-        {"content": "Document stores are NoSQL databases...", "metadata": {"source": "docs/test.txt"}},
-        {"content": "A document-oriented database...", "metadata": {"source": "docs/sample.md"}}
+    test_queries = [
+        "What is a document store?",
+        "How to implement vector search?",
+        "What is a language model?",
+        "How to optimize query performance?",
+        "What is document chunking?"
     ]
     
-    # Store the result
-    cache.set(test_query, test_result)
+    # Store test items
+    for i, query in enumerate(test_queries):
+        test_result = [
+            {"content": f"Test content for {query}...", "metadata": {"source": f"docs/test{i}.txt"}},
+            {"content": f"More info about {query}...", "metadata": {"source": f"docs/sample{i}.md"}}
+        ]
+        cache.set(query, test_result)
+        print(f"Added to cache: {query}")
     
-    # Retrieve the result
-    retrieved = cache.get(test_query)
-    print(f"Retrieved from cache: {retrieved is not None}")
-    if retrieved:
-        print(f"First result: {retrieved[0]['content'][:30]}...")
-    
-    # Test with a query that's not in the cache
-    missing = cache.get("This query doesn't exist")
-    print(f"Missing query returns: {missing}")
+    # Retrieve items (first should be evicted)
+    for query in test_queries:
+        result = cache.get(query)
+        if result:
+            print(f"Cache hit for '{query}': {result[0]['content'][:20]}...")
+        else:
+            print(f"Cache miss for '{query}'")
     
     # Print statistics
-    print(f"Cache statistics: {cache.get_stats()}") 
+    print(f"\nCache statistics: {cache.get_stats()}") 

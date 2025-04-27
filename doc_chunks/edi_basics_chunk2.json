@@ -1,0 +1,11 @@
+{
+  "content": "- 810: Invoice\n- 850: Purchase Order\n- 856: Advanced Shipping Notice\n- 997: Functional Acknowledgment\n\n### EDIFACT\n\nDeveloped by the United Nations, EDIFACT (Electronic Data Interchange for Administration, Commerce and Transport) is used internationally. Common EDIFACT messages include:\n\n- ORDERS: Purchase Order\n- INVOIC: Invoice\n- DESADV: Dispatch Advice (similar to X12 856)\n- CONTRL: Acknowledgment Message\n\n## EDI Document Structure\n\n### X12 Structure\n\nA typical X12 transaction consists of:\n\n1. **Interchange Control Header (ISA)**: Identifies the sender and receiver\n2. **Functional Group Header (GS)**: Groups related transaction sets\n3. **Transaction Set Header (ST)**: Marks the beginning of a transaction\n4. **Data Segments**: Contains the actual business data\n5. **Transaction Set Trailer (SE)**: Marks the end of a transaction\n6. **Functional Group Trailer (GE)**: Marks the end of a functional group\n7. **Interchange Control Trailer (IEA)**: Marks the end of the interchange",
+  "metadata": {
+    "source": "docs/edi/edi_basics.md",
+    "relative_path": "docs/edi/edi_basics.md",
+    "filename": "edi_basics.md",
+    "filetype": "md",
+    "chunk_index": 1,
+    "total_chunks": 4
+  }
+}

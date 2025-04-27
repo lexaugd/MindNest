@@ -1,0 +1,11 @@
+{
+  "content": "In general, the collection activity of the Big Data Application Provider\nhandles the interface with the Data Provider. This may be a general\nservice, such as a file server or web server configured by the System\nOrchestrator to accept or perform specific collections of data, or it\nmay be an application-specific service designed to pull data or receive\npushes of data from the Data Provider. Since this activity is receiving\ndata at a minimum, it must store/buffer the received data until it is\npersisted through the Big Data Framework Provider. This persistence need\nnot be to physical media but may simply be to an in-memory queue or\nother service provided by the processing frameworks of the Big Data\nFramework Provider. The collection activity is likely where the\nextraction portion of the Extract, Transform, Load (ETL)/Extract, Load,\nTransform (ELT) cycle is performed. At the initial collection stage,\nsets of data (e.g., data records) of similar structure are collected",
+  "metadata": {
+    "source": "docs/edi/edi_introduction-component-specific-interface-requirements.md",
+    "relative_path": "docs/edi/edi_introduction-component-specific-interface-requirements.md",
+    "filename": "edi_introduction-component-specific-interface-requirements.md",
+    "filetype": "md",
+    "chunk_index": 10,
+    "total_chunks": 24
+  }
+}
