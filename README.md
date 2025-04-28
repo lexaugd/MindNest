@@ -2,6 +2,17 @@
 
 An intelligent documentation system that uses AI to understand and answer questions about your codebase.
 
+## What's New in v1.3
+
+- **Enhanced Conversational Capabilities**: Intelligent detection of conversational queries with specialized processing
+- **Improved Query Classification**: Advanced classification using semantic embeddings for better intent understanding
+- **Hybrid Document Retrieval**: Combined dense and sparse retrieval methods with reranking for more relevant results
+- **Conversation History Management**: Context tracking across multiple interactions for more coherent dialogues
+- **Clean Code Architecture**: Complete refactoring of legacy code, simplified directory structure, and improved modularity
+- **Robust Error Handling**: Graceful fallbacks ensure the system always responds appropriately to all query types
+
+See the [full release notes](release_notes/v1.3-conversational-query-improvements.md) for details.
+
 ## Features
 
 - **Multi-Format Support**: Understands Java, Groovy, Python, JavaScript, TypeScript, and plain text documentation
@@ -18,6 +29,9 @@ An intelligent documentation system that uses AI to understand and answer questi
 - **Response Quality Controls**: Validation and formatting to ensure consistent, high-quality responses
 - **Comprehensive Test Suite**: Automated testing for context optimization and document processing
 - **Docker Support**: Run in containers with optimized resource configuration
+- **Conversational Query Processing**: Intelligent detection and handling of conversational vs. document-based queries
+- **Enhanced Hybrid Retrieval**: Combined dense and sparse retrieval with cross-encoder reranking for better results
+- **Conversation History Management**: Maintains context across multiple interactions for coherent dialogues
 
 ## Docker Installation
 
@@ -91,8 +105,8 @@ If you prefer to run without Docker:
    ./run.sh start:light
    
    # Alternatively, run directly with Python
-   python run_server.py  # Standard mode
-   USE_SMALL_MODEL=true python run_server.py  # Lightweight mode
+   python -m mindnest.app  # Standard mode
+   USE_SMALL_MODEL=true python -m mindnest.app  # Lightweight mode
    ```
 
 4. Access the application at http://localhost:8000
@@ -139,59 +153,70 @@ If you encounter issues:
 MindNest/
 ├── docs/                       # Documentation and code examples
 │   ├── examples/               # Code examples by language
-│   │   ├── java/               # Java code examples
-│   │   ├── groovy/             # Groovy code examples
-│   │   ├── python/             # Python code examples
-│   │   └── javascript/         # JavaScript examples
 │   ├── features/               # Feature documentation
-│   │   ├── context_window.md   # Context window optimization documentation
-│   │   ├── query_processing.md # Query processing documentation
-│   │   └── model_support.md    # Model capabilities documentation
 │   └── user_guides/            # User-focused documentation
-│       ├── setup.md            # Setup instructions
-│       ├── docker_guide.md     # Docker configuration guide
-│       └── usage.md            # Usage instructions
 ├── mindnest/                   # Main package directory
 │   ├── __init__.py             # Package initialization
 │   ├── api/                    # API endpoints
 │   │   ├── __init__.py         # API package initialization
-│   │   ├── endpoints.py        # API endpoints implementation
-│   │   └── models.py           # API data models
+│   │   └── endpoints.py        # API endpoints implementation
 │   ├── core/                   # Core application logic
 │   │   ├── __init__.py         # Core package initialization
 │   │   ├── config.py           # Configuration management
 │   │   ├── llm_manager.py      # LLM initialization and management
-│   │   ├── document_processor.py # Document processing logic
-│   │   └── response_generator.py # Response generation logic
+│   │   └── document_processor.py # Document processing logic
 │   ├── utils/                  # Utility modules
 │   │   ├── __init__.py         # Utils package initialization
-│   │   ├── document_compression.py # Document compression utilities
-│   │   ├── document_tracker.py # Document change tracking
+│   │   ├── document_compression.py    # Document compression utilities
+│   │   ├── document_processor.py      # Document processing utilities
+│   │   ├── document_tracker.py        # Document change tracking
 │   │   ├── incremental_vectorstore.py # Vector database management
-│   │   ├── query_cache.py      # Query caching
-│   │   ├── query_classification/ # Query classification
-│   │   │   ├── __init__.py      # Classification package initialization
-│   │   │   ├── classifier.py    # Query classifier implementation
-│   │   │   ├── model_loader.py  # ML model loader
-│   │   │   └── example_queries.py # Training examples
-│   │   ├── query_optimization.py # Query optimization
-│   │   ├── responses.py        # Response formatting
-│   │   └── token_counter.py    # Token counting utilities
+│   │   ├── enhanced_vectorstore.py    # Enhanced vector storage capabilities
+│   │   ├── hybrid_retriever.py        # Hybrid retrieval implementation
+│   │   ├── bm25_retriever.py          # BM25 sparse retrieval
+│   │   ├── cross_encoder_reranker.py  # Result reranking with cross-encoders
+│   │   ├── conversational_response.py # Conversational response generation
+│   │   ├── query_cache.py             # Query caching
+│   │   ├── query_classification/      # Query classification
+│   │   │   ├── __init__.py            # Classification package initialization
+│   │   │   ├── classifier.py          # Query classifier implementation
+│   │   │   ├── model_loader.py        # ML model loader
+│   │   │   ├── feedback.py            # Feedback collection
+│   │   │   └── feedback_learning.py   # Continuous learning from feedback
+│   │   ├── query_optimization.py      # Query optimization
+│   │   ├── query_preprocessing.py     # Query preprocessing
+│   │   ├── response_formatter.py      # Response formatting
+│   │   ├── response_evaluation.py     # Response evaluation metrics
+│   │   ├── responses.py               # Response handling
+│   │   ├── logger.py                  # Logging utilities
+│   │   ├── models.py                  # Shared data models
+│   │   └── token_counter.py           # Token counting utilities
 │   └── app.py                  # Primary application entry point
 ├── scripts/                    # Utility scripts
 │   ├── cleanup_docs.py         # Document cleanup utilities
 │   ├── doc_chunker.py          # Semantic document chunker
-│   └── run_tests.py            # Test runner script
+│   ├── query_docs.py           # Document query utilities
+│   ├── run_tests.py            # Test runner script
+│   ├── test_query_classification.py  # Query classifier testing
+│   └── move_files.py           # File organization utility
 ├── tests/                      # Test suite
 │   ├── __init__.py             # Test package initialization
-│   ├── test_context_optimizer.py # Context optimization tests
-│   ├── test_document_processor.py # Document processing tests
-│   └── test_api_integration.py # API integration tests
+│   ├── test_context_optimizer.py    # Context optimization tests
+│   ├── test_document_processor.py   # Document processing tests
+│   ├── test_config.py               # Configuration tests
+│   ├── test_query_classification_script.py  # Classification script tests
+│   ├── test_zero_shot_classifier.py        # Classifier model tests
+│   └── test_response_evaluation.py         # Response evaluation tests
 ├── docker/                     # Docker configuration
 │   ├── Dockerfile              # Container definition
 │   └── docker-compose.yml      # Multi-container setup
 ├── static/                     # Static web files
 ├── models/                     # AI model files
+├── release_notes/              # Release documentation
+├── logs/                       # Application logs
+├── cache/                      # Cache storage
+├── chroma_db/                  # Vector database files
+├── data/                       # Data files
 ├── pyproject.toml              # Python project configuration
 ├── setup.py                    # Package setup script
 ├── requirements.txt            # Python dependencies (redirects to production)
@@ -204,6 +229,7 @@ MindNest/
 ├── CHANGELOG.md                # Release history and changes
 ├── LICENSE                     # License information
 ├── .gitignore                  # Git ignore file
+├── .dockerignore               # Docker ignore file
 └── run.sh                      # Shell script launcher
 ```
 

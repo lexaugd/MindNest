@@ -103,13 +103,13 @@ case "$1" in
     start)
         shift
         echo "Starting MindNest directly..."
-        python run_server.py "$@"
+        python -m mindnest.app "$@"
         ;;
     
     start:light)
         shift
         echo "Starting MindNest in lightweight mode..."
-        USE_SMALL_MODEL=true python run_server.py "$@"
+        USE_SMALL_MODEL=true python -m mindnest.app "$@"
         ;;
         
     *)
