@@ -66,3 +66,6 @@ models/**/.cache/
 # Keep models directory but exclude model files
 !models/
 !models/.gitkeep
+
+# Development task files
+_context/
