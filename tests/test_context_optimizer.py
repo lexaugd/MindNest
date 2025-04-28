@@ -4,8 +4,7 @@ import sys
 import os
 
 # Import the function to test
-sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
-from main import optimize_context_for_model
+from mindnest.utils.document_compression import optimize_context_for_model
 
 class TestContextOptimizer(unittest.TestCase):
 

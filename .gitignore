@@ -38,6 +38,23 @@ models/
 .env
 utils/doc_tracking.json
 utils/query_cache.json
+mindnest/utils/doc_tracking.json
+mindnest/utils/query_cache.json
+doc_chunks/
 
 # Logs
-*.log 
+*.log
+logs/
+
+# mypy
+.mypy_cache/
+
+# pytest
+.pytest_cache/
+.coverage
+htmlcov/
+
+# Distribution
+dist/
+build/
+*.egg-info/ 

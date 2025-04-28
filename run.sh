@@ -54,7 +54,7 @@ case "$1" in
     docker:start)
         check_docker
         echo "Starting MindNest container..."
-        docker-compose up -d --build
+        docker-compose -f docker/docker-compose.yml up -d --build
         
         if [ $MODELS_WARNING -eq 1 ]; then
             echo ""
@@ -73,43 +73,43 @@ case "$1" in
     docker:stop)
         check_docker
         echo "Stopping MindNest container..."
-        docker-compose down
+        docker-compose -f docker/docker-compose.yml down
         ;;
     
     docker:restart)
         check_docker
         echo "Restarting MindNest container..."
-        docker-compose restart
+        docker-compose -f docker/docker-compose.yml restart
         ;;
     
     docker:logs)
         check_docker
         echo "Showing logs from MindNest container..."
-        docker-compose logs -f
+        docker-compose -f docker/docker-compose.yml logs -f
         ;;
     
     docker:shell)
         check_docker
         echo "Opening shell in MindNest container..."
-        docker-compose exec mindnest bash
+        docker-compose -f docker/docker-compose.yml exec mindnest bash
         ;;
     
     docker:clean)
         check_docker
         echo "Removing MindNest container and images..."
-        docker-compose down --rmi all
+        docker-compose -f docker/docker-compose.yml down --rmi all
         ;;
     
     start)
         shift
         echo "Starting MindNest directly..."
-        python run_direct.py "$@"
+        python run_server.py "$@"
         ;;
     
     start:light)
         shift
         echo "Starting MindNest in lightweight mode..."
-        python run_direct.py --lightweight "$@"
+        USE_SMALL_MODEL=true python run_server.py "$@"
         ;;
         
     *)

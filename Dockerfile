@@ -9,8 +9,12 @@ RUN apt-get update && \
     apt-get install -y build-essential && \
     rm -rf /var/lib/apt/lists/*
 
+# Create requirements directory
+RUN mkdir -p requirements
+
 # Copy requirements files first for better layer caching
-COPY requirements.txt requirements-lightweight.txt ./
+COPY requirements.txt ./
+COPY requirements/base.txt requirements/production.txt requirements/lightweight.txt ./requirements/
 
 # Install Python dependencies
 RUN pip install --no-cache-dir -r requirements.txt
@@ -33,5 +37,5 @@ ENV MINDNEST_MODE=lightweight
 # Expose port
 EXPOSE 8000
 
-# Run the application in lightweight mode
-CMD ["python", "run_direct.py", "--lightweight", "--lightweight-model"] 
+# Run the application using the standard entrypoint
+CMD ["python", "run_server.py"] 

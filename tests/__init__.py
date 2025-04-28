@@ -1,3 +1,3 @@
 """
-Unit tests for MindNest.
+MindNest test suite.
 """ 

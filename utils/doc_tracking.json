@@ -1,195 +1,235 @@
 {
-  "last_update": "2025-04-27T15:37:43.284580",
+  "last_update": "2025-04-27T19:34:15.975709",
   "files": {
-    "/Users/alekseiugadov/Cursor/MindNest/docs/sample-new.md": {
-      "hash": "28fe50c1fe6bc0009483ae77b8d7aaeb",
-      "last_modified": 1745542099.452399,
-      "last_indexed": "2025-04-27T15:32:30.913791"
+    "/Users/alekseiugadov/Cursor/MindNest/docs/docker-setup.md": {
+      "hash": "27cb4d3bdc0cb6c832bbb12a79adedea",
+      "last_modified": 1745535540.1239007,
+      "last_indexed": "2025-04-27T18:03:41.661979"
     },
     "/Users/alekseiugadov/Cursor/MindNest/docs/edi/edi_850_guide.md": {
       "hash": "5755472aeb9f7228a7a028d03931b8d7",
-      "last_modified": 1745775145.881804,
-      "last_indexed": "2025-04-27T15:32:30.913913"
+      "last_modified": 1745783170.9694066,
+      "last_indexed": "2025-04-27T18:03:41.662259"
     },
     "/Users/alekseiugadov/Cursor/MindNest/docs/edi/edi_introduction-compute-management-functions.md": {
       "hash": "577f275392cea350a9dc6852cc8e4d25",
-      "last_modified": 1745780041.4271464,
-      "last_indexed": "2025-04-27T15:32:30.913948"
+      "last_modified": 1745783170.9707599,
+      "last_indexed": "2025-04-27T18:03:41.662404"
     },
     "/Users/alekseiugadov/Cursor/MindNest/docs/edi/edi_introduction-component-specific-interface-requirements.md": {
       "hash": "5b75b68d013f1cdf9c84e0b18fdbfdbd",
-      "last_modified": 1745780041.425372,
-      "last_indexed": "2025-04-27T15:32:30.914007"
+      "last_modified": 1745783170.9704237,
+      "last_indexed": "2025-04-27T18:03:41.662582"
     },
     "/Users/alekseiugadov/Cursor/MindNest/docs/edi/edi_introduction-report-production-secproduction.md": {
       "hash": "e1c437c14f062f0e36eabf9f5687d8d4",
-      "last_modified": 1745780041.425032,
-      "last_indexed": "2025-04-27T15:32:30.914048"
+      "last_modified": 1745783170.9735122,
+      "last_indexed": "2025-04-27T18:03:41.662748"
     },
     "/Users/alekseiugadov/Cursor/MindNest/docs/edi/edi_introduction-identity-secspec-identity.md": {
       "hash": "2a4f4d07d9283bfde4734dd2a084e894",
-      "last_modified": 1745780041.4264817,
-      "last_indexed": "2025-04-27T15:32:30.914080"
+      "last_modified": 1745783170.972408,
+      "last_indexed": "2025-04-27T18:03:41.662925"
     },
     "/Users/alekseiugadov/Cursor/MindNest/docs/edi/edi_introduction-design-by-resource-oriented-architecture.md": {
       "hash": "54f16d2d9c4efddbf233423d328b7eb6",
-      "last_modified": 1745780041.425621,
-      "last_indexed": "2025-04-27T15:32:30.914111"
+      "last_modified": 1745783170.971948,
+      "last_indexed": "2025-04-27T18:03:41.663479"
     },
     "/Users/alekseiugadov/Cursor/MindNest/docs/edi/edi_introduction-data-management.md": {
       "hash": "496489a685b0b6e29541639a75689da2",
-      "last_modified": 1745780041.426664,
-      "last_indexed": "2025-04-27T15:32:30.914141"
+      "last_modified": 1745783170.971404,
+      "last_indexed": "2025-04-27T18:03:41.663549"
     },
     "/Users/alekseiugadov/Cursor/MindNest/docs/edi/edi_introduction-status-codes-and-error-responses.md": {
       "hash": "3d14d3fc1c90b958bad212e0da09ff0a",
-      "last_modified": 1745780041.4263053,
-      "last_indexed": "2025-04-27T15:32:30.914173"
+      "last_modified": 1745783170.9741337,
+      "last_indexed": "2025-04-27T18:03:41.663601"
     },
     "/Users/alekseiugadov/Cursor/MindNest/docs/edi/edi_introduction-list-of-specifications-secspec-table.md": {
       "hash": "a4844d552e08d70a63b669d42044b9f3",
-      "last_modified": 1745780041.4261284,
-      "last_indexed": "2025-04-27T15:32:30.914203"
+      "last_modified": 1745783170.973069,
+      "last_indexed": "2025-04-27T18:03:41.663651"
     },
     "/Users/alekseiugadov/Cursor/MindNest/docs/edi/edi_introduction-hybrid-and-multiple-frameworks.md": {
       "hash": "c4600dd44511c4da6c95010220ff79ff",
-      "last_modified": 1745780041.4255369,
-      "last_indexed": "2025-04-27T15:32:30.914234"
+      "last_modified": 1745783170.97226,
+      "last_indexed": "2025-04-27T18:03:41.663700"
     },
     "/Users/alekseiugadov/Cursor/MindNest/docs/edi/edi_introduction-specification-secspecification.md": {
       "hash": "78c2aac7239ab8607deb3b490e33653c",
-      "last_modified": 1745780041.426039,
-      "last_indexed": "2025-04-27T15:32:30.914264"
+      "last_modified": 1745783170.9739964,
+      "last_indexed": "2025-04-27T18:03:41.663749"
     },
     "/Users/alekseiugadov/Cursor/MindNest/docs/edi/edi_introduction-variable-defualt-and-alias.md": {
       "hash": "156237592d0462cae035932ee513e2f1",
-      "last_modified": 1745780041.4265692,
-      "last_indexed": "2025-04-27T15:32:30.914295"
+      "last_modified": 1745783170.9744384,
+      "last_indexed": "2025-04-27T18:03:41.663797"
     },
     "/Users/alekseiugadov/Cursor/MindNest/docs/edi/edi_introduction-timestamp.md": {
       "hash": "7816440bfed3d68061e6ed87b8972a5a",
-      "last_modified": 1745780041.426391,
-      "last_indexed": "2025-04-27T15:32:30.914326"
+      "last_modified": 1745783170.9742916,
+      "last_indexed": "2025-04-27T18:03:41.663847"
     },
     "/Users/alekseiugadov/Cursor/MindNest/docs/edi/edi_introduction-scope-and-objectives-of-the-reference-architectures-subgroup.md": {
       "hash": "dc47c2ab2e4ab91a1ab807af033d1dc8",
-      "last_modified": 1745780041.4249494,
-      "last_indexed": "2025-04-27T15:32:30.914360"
+      "last_modified": 1745783170.9737391,
+      "last_indexed": "2025-04-27T18:03:41.663900"
     },
     "/Users/alekseiugadov/Cursor/MindNest/docs/edi/edi_introduction-introduction-secintroduction.md": {
       "hash": "eb256f5680b7e83ea46b7e44768295ca",
-      "last_modified": 1745780041.424741,
-      "last_indexed": "2025-04-27T15:32:30.914389"
+      "last_modified": 1745783170.97287,
+      "last_indexed": "2025-04-27T18:03:41.663948"
     },
     "/Users/alekseiugadov/Cursor/MindNest/docs/edi/edi_introduction-compute-management-containers.md": {
       "hash": "94b2c81b91c3e4ab655aa90f7a403ecb",
-      "last_modified": 1745780041.426954,
-      "last_indexed": "2025-04-27T15:32:30.914418"
+      "last_modified": 1745783170.9705913,
+      "last_indexed": "2025-04-27T18:03:41.663996"
     },
     "/Users/alekseiugadov/Cursor/MindNest/docs/edi/edi_introduction-high-level-requirements-of-the-interface-approach.md": {
       "hash": "adfda9f7c6ac1f2b66ca105acf5fd37e",
-      "last_modified": 1745780041.4252467,
-      "last_indexed": "2025-04-27T15:32:30.914458"
+      "last_modified": 1745783170.9721243,
+      "last_indexed": "2025-04-27T18:03:41.664171"
     },
     "/Users/alekseiugadov/Cursor/MindNest/docs/edi/edi_basics.md": {
       "hash": "bee33e1849c93d1cb84358ba792ae7f8",
-      "last_modified": 1745775136.7985024,
-      "last_indexed": "2025-04-27T15:32:30.914491"
+      "last_modified": 1745783170.9695656,
+      "last_indexed": "2025-04-27T18:03:41.664228"
     },
     "/Users/alekseiugadov/Cursor/MindNest/docs/edi/edi_introduction-compute-management-map-reduce.md": {
       "hash": "9246bfb4b70ee54def0c209e8ab594e1",
-      "last_modified": 1745780041.4270544,
-      "last_indexed": "2025-04-27T15:32:30.914519"
+      "last_modified": 1745783170.9709287,
+      "last_indexed": "2025-04-27T18:03:41.664278"
     },
     "/Users/alekseiugadov/Cursor/MindNest/docs/edi/edi_introduction-authentication.md": {
       "hash": "6a6d9367d2df915beb3d3456c9c60f52",
-      "last_modified": 1745780041.426214,
-      "last_indexed": "2025-04-27T15:32:30.914549"
+      "last_modified": 1745783170.9700215,
+      "last_indexed": "2025-04-27T18:03:41.664327"
     },
     "/Users/alekseiugadov/Cursor/MindNest/docs/edi/edi_introduction-refernce-implementations.md": {
       "hash": "ca039e87e54d403766ce74b779b3b098",
-      "last_modified": 1745780041.4259553,
-      "last_indexed": "2025-04-27T15:32:30.914577"
+      "last_modified": 1745783170.9733813,
+      "last_indexed": "2025-04-27T18:03:41.664374"
     },
     "/Users/alekseiugadov/Cursor/MindNest/docs/edi/edi_introduction-nbdra-interface-requirements-secinterface-requirements.md": {
       "hash": "8dc73ee83449e798ccd540c9bf2b8b43",
-      "last_modified": 1745780041.4251213,
-      "last_indexed": "2025-04-27T15:32:30.914611"
+      "last_modified": 1745783170.9732318,
+      "last_indexed": "2025-04-27T18:03:41.664430"
     },
     "/Users/alekseiugadov/Cursor/MindNest/docs/edi/edi_introduction-interface-compliancy.md": {
       "hash": "61d855e3b02509f60a6c6cc9ffc9df19",
-      "last_modified": 1745780041.4258652,
-      "last_indexed": "2025-04-27T15:32:30.914640"
+      "last_modified": 1745783170.9725714,
+      "last_indexed": "2025-04-27T18:03:41.664478"
     },
     "/Users/alekseiugadov/Cursor/MindNest/docs/edi/edi_introduction-design-by-example.md": {
       "hash": "4bc746b32e9d5ee32e2bf4f066eb5e10",
-      "last_modified": 1745780041.4257054,
-      "last_indexed": "2025-04-27T15:32:30.914668"
+      "last_modified": 1745783170.9717948,
+      "last_indexed": "2025-04-27T18:03:41.664525"
     },
     "/Users/alekseiugadov/Cursor/MindNest/docs/edi/edi_introduction-deployment.md": {
       "hash": "554f28444d9498ae2f703b36ee4ea144",
-      "last_modified": 1745780041.4274309,
-      "last_indexed": "2025-04-27T15:32:30.914697"
+      "last_modified": 1745783170.9716592,
+      "last_indexed": "2025-04-27T18:03:41.664569"
     },
     "/Users/alekseiugadov/Cursor/MindNest/docs/edi/edi_introduction-reservation.md": {
       "hash": "da55cf4047bc565524ad3385130f433e",
-      "last_modified": 1745780041.427258,
-      "last_indexed": "2025-04-27T15:32:30.914724"
+      "last_modified": 1745783170.97362,
+      "last_indexed": "2025-04-27T18:03:41.664613"
     },
     "/Users/alekseiugadov/Cursor/MindNest/docs/edi/edi_integration_patterns.md": {
       "hash": "4b58cbf22187166ba3846e6c01f76ae3",
-      "last_modified": 1745775170.6037,
-      "last_indexed": "2025-04-27T15:32:30.914760"
+      "last_modified": 1745783170.969741,
+      "last_indexed": "2025-04-27T18:03:41.664748"
     },
     "/Users/alekseiugadov/Cursor/MindNest/docs/edi/edi_introduction-data-streams.md": {
       "hash": "20ae5ae3c067585ec03142a94963286b",
-      "last_modified": 1745780041.4273443,
-      "last_indexed": "2025-04-27T15:32:30.914789"
+      "last_modified": 1745783170.971543,
+      "last_indexed": "2025-04-27T18:03:41.664795"
     },
     "/Users/alekseiugadov/Cursor/MindNest/docs/edi/edi_introduction-compute-management-virtual-machines.md": {
       "hash": "23a5cd941a5383f59a240f260542251e",
-      "last_modified": 1745780041.4268515,
-      "last_indexed": "2025-04-27T15:32:30.914821"
+      "last_modified": 1745783170.9712498,
+      "last_indexed": "2025-04-27T18:03:41.664843"
     },
     "/Users/alekseiugadov/Cursor/MindNest/docs/edi/edi_introduction-compute-management-virtual-clusters.md": {
       "hash": "a62bb602684483cd5e4dacc2bc756b74",
-      "last_modified": 1745780041.4267566,
-      "last_indexed": "2025-04-27T15:32:30.914850"
+      "last_modified": 1745783170.9710937,
+      "last_indexed": "2025-04-27T18:03:41.664888"
     },
     "/Users/alekseiugadov/Cursor/MindNest/docs/edi/edi_introduction-version-management.md": {
       "hash": "71c1ecec7226301ef8f47855fdbba3dc",
-      "last_modified": 1745780041.4257846,
-      "last_indexed": "2025-04-27T15:32:30.914880"
+      "last_modified": 1745783170.9745815,
+      "last_indexed": "2025-04-27T18:03:41.664934"
     },
     "/Users/alekseiugadov/Cursor/MindNest/docs/edi/edi_introduction-specification-paradigm-secspec-paradigm.md": {
       "hash": "06a5c771c5977539f90b08767642620b",
-      "last_modified": 1745780041.4254575,
-      "last_indexed": "2025-04-27T15:32:30.914910"
+      "last_modified": 1745783170.9738657,
+      "last_indexed": "2025-04-27T18:03:41.664983"
     },
     "/Users/alekseiugadov/Cursor/MindNest/docs/edi/edi_introduction-background.md": {
       "hash": "3a25dee421a4cac758d13418debb872f",
-      "last_modified": 1745780041.4248629,
-      "last_indexed": "2025-04-27T15:32:30.914952"
+      "last_modified": 1745783170.9702034,
+      "last_indexed": "2025-04-27T18:03:41.665124"
+    },
+    "/Users/alekseiugadov/Cursor/MindNest/docs/user_guides/docker_guide.md": {
+      "hash": "54399969fa03095331f31844fcacfddf",
+      "last_modified": 1745790978.843875,
+      "last_indexed": "2025-04-27T18:03:41.665320"
+    },
+    "/Users/alekseiugadov/Cursor/MindNest/docs/user_guides/setup.md": {
+      "hash": "35e7e620f986f8cef7c65aa8a874109a",
+      "last_modified": 1745790974.4207108,
+      "last_indexed": "2025-04-27T18:03:41.665468"
+    },
+    "/Users/alekseiugadov/Cursor/MindNest/docs/user_guides/usage.md": {
+      "hash": "8d95096f61f588745e63d1c176f28c03",
+      "last_modified": 1745788012.4857392,
+      "last_indexed": "2025-04-27T18:03:41.665604"
     },
     "/Users/alekseiugadov/Cursor/MindNest/docs/txt/test_documentation.txt": {
       "hash": "e438f7c5dee6365eb196b900167c1b05",
       "last_modified": 1745288238.7543805,
-      "last_indexed": "2025-04-27T15:32:30.915291"
+      "last_indexed": "2025-04-27T18:03:41.665751"
+    },
+    "/Users/alekseiugadov/Cursor/MindNest/docs/features/model_support.md": {
+      "hash": "f8062c8c70dc66195b86973d1eb4266a",
+      "last_modified": 1745787930.4290628,
+      "last_indexed": "2025-04-27T18:03:41.665985"
+    },
+    "/Users/alekseiugadov/Cursor/MindNest/docs/features/context_window.md": {
+      "hash": "c63030b0db1e498769671385efa69920",
+      "last_modified": 1745787508.8958633,
+      "last_indexed": "2025-04-27T18:03:41.666121"
+    },
+    "/Users/alekseiugadov/Cursor/MindNest/docs/features/query_processing.md": {
+      "hash": "2490177c23ec2b8e947338172400832d",
+      "last_modified": 1745787890.5312736,
+      "last_indexed": "2025-04-27T18:03:41.666235"
     },
     "/Users/alekseiugadov/Cursor/MindNest/docs/java/TestClass.java": {
       "hash": "cbcfd23d5b4a316f06f954b6afca516b",
       "last_modified": 1745288235.302498,
-      "last_indexed": "2025-04-27T15:32:30.915638"
+      "last_indexed": "2025-04-27T18:03:41.666398"
     },
     "/Users/alekseiugadov/Cursor/MindNest/docs/md/03_Object_Wrappers.md": {
       "hash": "920b301e09fd0d9c00454740e338a239",
       "last_modified": 1745540901.546567,
-      "last_indexed": "2025-04-27T15:32:30.915753"
+      "last_indexed": "2025-04-27T18:03:41.666841"
+    },
+    "/Users/alekseiugadov/Cursor/MindNest/docs/md/MindNest_Documentation.md": {
+      "hash": "8a51be831b2cfd174744ea9107ed8143",
+      "last_modified": 1745784887.646113,
+      "last_indexed": "2025-04-27T18:03:41.667000"
+    },
+    "/Users/alekseiugadov/Cursor/MindNest/docs/md/sample-new.md": {
+      "hash": "28fe50c1fe6bc0009483ae77b8d7aaeb",
+      "last_modified": 1745783170.974718,
+      "last_indexed": "2025-04-27T18:03:41.667151"
     },
     "/Users/alekseiugadov/Cursor/MindNest/docs/groovy/TestGroovy.groovy": {
       "hash": "662b7b8ca336839c7a36a7331b7c49e7",
       "last_modified": 1745288232.3675745,
-      "last_indexed": "2025-04-27T15:32:30.915962"
+      "last_indexed": "2025-04-27T18:03:41.667294"
     }
   }
 }

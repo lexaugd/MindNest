@@ -4,140 +4,87 @@ Tests for the document processor module.
 
 import os
 import unittest
-from unittest.mock import patch, MagicMock
-from tempfile import TemporaryDirectory
+import tempfile
 from pathlib import Path
+import shutil
 
-from utils.document_processor import DocumentProcessor
+# Import from utils module
+from mindnest.utils.document_processor import DocumentProcessor
 
 class TestDocumentProcessor(unittest.TestCase):
-    """Test cases for the DocumentProcessor class."""
+    """Test the document processor functionality."""
     
     def setUp(self):
         """Set up test environment."""
-        # Create a temporary directory for test files
-        self.temp_dir = TemporaryDirectory()
-        self.docs_dir = Path(self.temp_dir.name)
+        # Create temporary directory for test files
+        self.test_dir = tempfile.mkdtemp()
         
-        # Create a test document processor
-        self.processor = DocumentProcessor(
-            docs_dir=self.docs_dir,
-            chunk_size=500,
-            chunk_overlap=100
-        )
+        # Create test files
+        with open(os.path.join(self.test_dir, "test.txt"), "w") as f:
+            f.write("This is a test document.\nIt has multiple lines.\nIt is used for testing.")
         
-        # Create some test files
-        self.test_files = []
-        self._create_test_files()
+        with open(os.path.join(self.test_dir, "test.py"), "w") as f:
+            f.write("def test_function():\n    print('This is a test function')\n    return True")
+        
+        # Create processor with test directory
+        self.processor = DocumentProcessor(docs_dir=self.test_dir)
     
     def tearDown(self):
         """Clean up after tests."""
-        self.temp_dir.cleanup()
+        # Remove temporary directory
+        shutil.rmtree(self.test_dir)
     
-    def _create_test_files(self):
-        """Create test files in the temporary directory."""
-        # Create a text file
-        text_file = self.docs_dir / "test.txt"
-        with open(text_file, "w") as f:
-            f.write("This is a test document.\nIt has multiple lines.\nThis is for testing purposes.")
-        self.test_files.append(text_file)
+    def test_load_documents(self):
+        """Test loading documents from directory."""
+        # Load documents
+        docs = self.processor.load_documents()
         
-        # Create a Python file
-        py_file = self.docs_dir / "test.py"
-        with open(py_file, "w") as f:
-            f.write("""def test_function():
-    \"\"\"This is a test function.\"\"\"
-    return "Hello, world!"
-""")
-        self.test_files.append(py_file)
+        # Check that documents were loaded
+        self.assertGreater(len(docs), 0)
+        
+        # Check that document content was extracted
+        self.assertTrue(any("test document" in doc.page_content for doc in docs))
+        
+        # Check that Python file was loaded
+        self.assertTrue(any("test_function" in doc.page_content for doc in docs))
     
-    def test_initialization(self):
-        """Test that the processor initializes correctly."""
-        self.assertEqual(self.processor.docs_dir, self.docs_dir)
-        self.assertEqual(self.processor.chunk_size, 500)
-        self.assertEqual(self.processor.chunk_overlap, 100)
+    def test_load_documents_filtered(self):
+        """Test loading documents with filtering."""
+        # Load only text files
+        docs = self.processor.load_documents(file_types=[".txt"])
+        
+        # Check that only text files were loaded
+        self.assertGreater(len(docs), 0)
+        self.assertTrue(all(".txt" in doc.metadata.get("source", "") for doc in docs))
+        
+        # Check that all text files contain expected content
+        self.assertTrue(all("test document" in doc.page_content for doc in docs))
     
-    def test_get_loader_for_file(self):
-        """Test the get_loader_for_file method."""
-        # Test with a text file
-        loader = self.processor.get_loader_for_file(self.test_files[0])
-        self.assertIsNotNone(loader)
+    def test_split_documents(self):
+        """Test splitting documents into chunks."""
+        # Load documents
+        docs = self.processor.load_documents()
         
-        # Test with a Python file
-        loader = self.processor.get_loader_for_file(self.test_files[1])
-        self.assertIsNotNone(loader)
+        # Split documents
+        chunks = self.processor.split_documents(docs)
         
-        # Test with an unsupported file type
-        unsupported_file = self.docs_dir / "test.xyz"
-        with open(unsupported_file, "w") as f:
-            f.write("Unsupported file type")
+        # Check that chunks were created
+        self.assertGreaterEqual(len(chunks), len(docs))
         
-        loader = self.processor.get_loader_for_file(unsupported_file)
-        self.assertIsNone(loader)
+        # Check that chunks have metadata
+        self.assertTrue(all("source" in chunk.metadata for chunk in chunks))
     
-    def test_load_file(self):
-        """Test the load_file method."""
-        # Test loading a text file
-        docs = self.processor.load_file(self.test_files[0])
-        self.assertTrue(len(docs) > 0)
-        self.assertIn("This is a test document.", docs[0].page_content)
-    
-    @patch("utils.document_processor.DirectoryLoader")
-    def test_load_directory(self, mock_loader):
-        """Test the load_directory method."""
-        # Mock the DirectoryLoader
-        mock_instance = MagicMock()
-        mock_loader.return_value = mock_instance
-        mock_instance.load.return_value = ["test document"]
+    def test_process_documents(self):
+        """Test the full document processing pipeline."""
+        # Process documents
+        docs = self.processor.process_documents()
         
-        # Call the method
-        result = self.processor.load_directory()
+        # Check that documents were processed
+        self.assertGreater(len(docs), 0)
         
-        # Check that the loader was called at least once
-        self.assertTrue(mock_loader.called)
-        
-        # Check that the result contains the expected extension
-        for ext in self.processor.loaders.keys():
-            file_path = self.docs_dir / f"test{ext}"
-            with open(file_path, "w") as f:
-                f.write(f"Test file with extension {ext}")
-        
-        # Test with real files
-        with patch("utils.document_processor.logger"):  # Suppress logging
-            result = self.processor.load_directory()
-            # Check that we got some results
-            self.assertTrue(len(result) > 0)
-    
-    def test_chunk_documents(self):
-        """Test the chunk_documents method."""
-        # Create test documents
-        from langchain.docstore.document import Document
-        docs = [
-            Document(page_content="This is the first test document with enough text to be split into multiple chunks based on the test configuration. " * 10),
-            Document(page_content="This is the second test document with enough text to be split into multiple chunks based on the test configuration. " * 10)
-        ]
-        
-        # Chunk the documents
-        chunks = self.processor.chunk_documents(docs)
-        
-        # Check that we got more chunks than original documents
-        self.assertTrue(len(chunks) > len(docs))
-    
-    def test_process_files(self):
-        """Test the process_files method."""
-        # Process the test files
-        chunks = self.processor.process_files(self.test_files)
-        
-        # Check that we got some chunks
-        self.assertTrue(len(chunks) > 0)
-    
-    def test_process_directory(self):
-        """Test the process_directory method."""
-        # Process the test directory
-        chunks = self.processor.process_directory(self.docs_dir)
-        
-        # Check that we got some chunks
-        self.assertTrue(len(chunks) > 0)
+        # Check that chunks have content and metadata
+        self.assertTrue(all(len(doc.page_content) > 0 for doc in docs))
+        self.assertTrue(all("source" in doc.metadata for doc in docs))
 
 if __name__ == "__main__":
     unittest.main() 

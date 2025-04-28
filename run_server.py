@@ -1,45 +1,34 @@
+#!/usr/bin/env python
 """
-Server runner for MindNest.
-Starts the FastAPI server with vector search capabilities.
+Server script for running MindNest application.
+This file provides a convenient way to run the MindNest server.
 """
 
-import os
 import sys
-import uvicorn
-from time import time
+import traceback
 
-from utils.config import config
-from utils.logger import app_logger as logger
-from utils.incremental_vectorstore import IncrementalVectorStore
+def exception_handler(exctype, value, tb):
+    """Custom exception handler to print detailed tracebacks"""
+    print("=" * 80)
+    print("UNCAUGHT EXCEPTION:")
+    traceback.print_exception(exctype, value, tb)
+    print("=" * 80)
+    sys.__excepthook__(exctype, value, tb)
 
-# Import app after logger initialization to ensure proper logging
-from main import app
+# Install the custom exception handler
+sys.excepthook = exception_handler
 
-def initialize_vectorstore():
-    """Initialize just the vector store (skip LLM)."""
-    logger.info("Initializing vector store only...")
-    vector_store = IncrementalVectorStore()
-    return vector_store.initialize_or_update()
+# Set up debug logging
+import logging
+logging.basicConfig(level=logging.DEBUG)
+
+# Import the server runner
+from mindnest.app import run_server
 
 if __name__ == "__main__":
-    # Record start time
-    start_time = time()
-    
-    # Make sure we're in the correct directory
-    script_dir = os.path.dirname(os.path.abspath(__file__))
-    os.chdir(script_dir)
-    
-    # Initialize vector store
-    vectorstore = initialize_vectorstore()
-    
-    if vectorstore:
-        logger.info(f"Vector store initialized with {len(vectorstore.get()['ids'])} documents")
-    else:
-        logger.warning("Vector store initialization failed")
-    
-    # Log initialization time
-    logger.info(f"Initialization completed in {time() - start_time:.2f} seconds")
-    
-    # Run the FastAPI server
-    logger.info(f"Starting server on {config.host}:{config.port} with vector search capabilities only...")
-    uvicorn.run(app, host=config.host, port=config.port) 
+    try:
+        print("Starting server with debug logging enabled...")
+        run_server() 
+    except Exception as e:
+        print(f"Error starting server: {e}")
+        traceback.print_exc() 

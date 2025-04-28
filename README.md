@@ -11,18 +11,13 @@ An intelligent documentation system that uses AI to understand and answer questi
 - **Optimized Performance**: Efficient caching and incremental updates for faster responses
 - **Lightweight Mode**: Option to run with vector search only for better performance
 - **Model Switching**: Choose between larger (high quality) or smaller (faster) language models
-<<<<<<< Updated upstream
 - **Multiple Launch Options**: Several ways to start the application including launcher script, direct run, or shell script
 - **Automatic Dependency Management**: Detects and installs missing dependencies automatically
-- **Context Window Optimization**: Intelligent document truncation based on model capabilities
+- **Context Window Optimization**: Intelligent document truncation based on model capabilities, with different strategies for small and large models
 - **Model-Aware Processing**: Different prompt templates and document limits based on model size
 - **Response Quality Controls**: Validation and formatting to ensure consistent, high-quality responses
-- **Comprehensive Test Suite**: Automated testing for core functionality
+- **Comprehensive Test Suite**: Automated testing for context optimization and document processing
 - **Docker Support**: Run in containers with optimized resource configuration
-=======
-- **Direct Runner**: Simple command-line interface to run the application with various options
-- **Docker Support**: Run the application in Docker for easier deployment
->>>>>>> Stashed changes
 
 ## Docker Installation
 
@@ -75,18 +70,17 @@ If you prefer to run without Docker:
 
 1. Install dependencies:
    ```bash
+   # Standard installation
    pip install -r requirements.txt
+   
+   # Development setup (includes testing tools)
+   pip install -r requirements/development.txt
+   
+   # Lightweight mode (minimal dependencies)
+   pip install -r requirements/lightweight.txt
    ```
 
-<<<<<<< Updated upstream
-5. Run the application (multiple options available):
-   - **Python Launcher**: `python mindnest_launcher.py` (see `release_notes/launcher_guide.md` for options)
-   - **Shell Script**: `./run.sh start` (Unix/Mac) or use Docker commands with `./run.sh docker:start`
-   - **Direct Run**: `python run_direct.py` with optional arguments like `--lightweight-model`
-   - **Manual Start**: `python main.py` (full mode) or `python run_server.py` (lightweight mode)
-=======
 2. Place model files in the `models/` directory
->>>>>>> Stashed changes
 
 3. Run the application directly:
    ```bash
@@ -96,11 +90,15 @@ If you prefer to run without Docker:
    # Lightweight mode
    ./run.sh start:light
    
-   # With additional options
-   ./run.sh start --lightweight-model --no-browser
+   # Alternatively, run directly with Python
+   python run_server.py  # Standard mode
+   USE_SMALL_MODEL=true python run_server.py  # Lightweight mode
    ```
 
-<<<<<<< Updated upstream
+4. Access the application at http://localhost:8000
+
+## Docker Deployment Options
+
 For Docker deployment, there are several options:
 
 1. Using `docker-compose.yml`:
@@ -116,8 +114,6 @@ docker-compose up -d
 ```
 
 3. For detailed instructions and optimized Colima setup for macOS, see [docker-setup.md](docker-setup.md).
-=======
-4. Access the application at http://localhost:8000
 
 ## Troubleshooting
 
@@ -130,96 +126,100 @@ If you encounter issues:
 
 2. Ensure model files are correctly placed in the `models/` directory
 
-3. For dependency conflicts in non-Docker setup, try using Python 3.10 with a fresh virtual environment
->>>>>>> Stashed changes
+3. Run the test suite to verify core functionality:
+   ```bash
+   python -m unittest tests/test_context_optimizer.py
+   ```
+
+4. For dependency conflicts in non-Docker setup, try using Python 3.10 with a fresh virtual environment
 
 ## Project Structure
 
 ```
 MindNest/
-<<<<<<< Updated upstream
 ├── docs/                       # Documentation and code examples
-│   ├── java/                   # Java code examples
-│   ├── groovy/                 # Groovy code examples
-│   ├── py/                     # Python code examples
-│   └── txt/                    # Text documentation
-├── models/                     # AI model files
-├── static/                     # Static web files
-├── utils/                      # Utility modules
-│   ├── config.py               # Configuration management
-│   ├── document_processor.py   # Document processing
-│   ├── document_tracker.py     # Document change tracking
-│   ├── incremental_vectorstore.py # Vector database management
-│   ├── llm_manager.py          # LLM initialization and management
-│   ├── logger.py               # Logging system
-│   ├── models.py               # Data models
-│   ├── query_cache.py          # Query caching
-│   ├── query_classification/   # Query classification
-│   │   ├── classifier.py       # Query classifier implementation
-│   │   ├── model_loader.py     # ML model loader
-│   │   └── example_queries.py  # Training examples
-│   ├── query_optimization.py   # Query classification and optimization
-│   └── responses.py            # Response formatting and quality control
+│   ├── examples/               # Code examples by language
+│   │   ├── java/               # Java code examples
+│   │   ├── groovy/             # Groovy code examples
+│   │   ├── python/             # Python code examples
+│   │   └── javascript/         # JavaScript examples
+│   ├── features/               # Feature documentation
+│   │   ├── context_window.md   # Context window optimization documentation
+│   │   ├── query_processing.md # Query processing documentation
+│   │   └── model_support.md    # Model capabilities documentation
+│   └── user_guides/            # User-focused documentation
+│       ├── setup.md            # Setup instructions
+│       ├── docker_guide.md     # Docker configuration guide
+│       └── usage.md            # Usage instructions
+├── mindnest/                   # Main package directory
+│   ├── __init__.py             # Package initialization
+│   ├── api/                    # API endpoints
+│   │   ├── __init__.py         # API package initialization
+│   │   ├── endpoints.py        # API endpoints implementation
+│   │   └── models.py           # API data models
+│   ├── core/                   # Core application logic
+│   │   ├── __init__.py         # Core package initialization
+│   │   ├── config.py           # Configuration management
+│   │   ├── llm_manager.py      # LLM initialization and management
+│   │   ├── document_processor.py # Document processing logic
+│   │   └── response_generator.py # Response generation logic
+│   ├── utils/                  # Utility modules
+│   │   ├── __init__.py         # Utils package initialization
+│   │   ├── document_compression.py # Document compression utilities
+│   │   ├── document_tracker.py # Document change tracking
+│   │   ├── incremental_vectorstore.py # Vector database management
+│   │   ├── query_cache.py      # Query caching
+│   │   ├── query_classification/ # Query classification
+│   │   │   ├── __init__.py      # Classification package initialization
+│   │   │   ├── classifier.py    # Query classifier implementation
+│   │   │   ├── model_loader.py  # ML model loader
+│   │   │   └── example_queries.py # Training examples
+│   │   ├── query_optimization.py # Query optimization
+│   │   ├── responses.py        # Response formatting
+│   │   └── token_counter.py    # Token counting utilities
+│   └── app.py                  # Primary application entry point
+├── scripts/                    # Utility scripts
+│   ├── cleanup_docs.py         # Document cleanup utilities
+│   ├── doc_chunker.py          # Semantic document chunker
+│   └── run_tests.py            # Test runner script
 ├── tests/                      # Test suite
-│   ├── test_config.py          # Configuration tests
+│   ├── __init__.py             # Test package initialization
 │   ├── test_context_optimizer.py # Context optimization tests
-│   └── test_document_processor.py # Document processing tests
-├── release_notes/              # Version release notes and documentation
-│   ├── environment_update.md   # Config migration guide
-│   ├── launcher_guide.md       # Launcher usage documentation
-│   ├── model_switching.md      # Model switching guide
-│   ├── v1.0.md                 # Version 1.0 notes
-│   ├── v1.1-ai-accuracy-improvements.md # AI improvements details
-│   └── v1.1-release.md         # Version 1.1 release summary
-├── doc_chunks/                 # Processed document chunks directory
-├── Dockerfile                  # Container definition
-├── docker-compose.yml          # Multi-container setup
-├── docker-setup.md             # Docker deployment guide
-├── .dockerignore               # Docker build exclusions
-├── mindnest_launcher.py        # Python launcher with options
-├── run.sh                      # Shell script with Docker support
-├── run_direct.py               # Direct runner script
-├── main.py                     # Main application with LLM
-├── run_server.py               # Lightweight server (vector search only)
-├── run_tests.py                # Test runner
-├── requirements.txt            # Python dependencies
-├── requirements-lightweight.txt # Minimal dependencies
-├── env.example                 # Environment variables template
-├── cleanup_docs.py             # Document cleanup utilities
-├── doc_chunker.py              # Semantic document chunker
-├── basic_app_with_docs.py      # Legacy application (deprecated)
-├── test_docs.py                # Old test script (deprecated)
-└── README.md                   # This file
-=======
-├── docs/                 # Documentation and code examples
-│   ├── java/            # Java code examples
-│   ├── groovy/          # Groovy code examples
-│   ├── py/              # Python code examples
-│   └── txt/             # Text documentation
-├── models/              # AI model files
-├── static/              # Static web files
-├── utils/               # Utility modules
-│   ├── config.py        # Configuration management
-│   ├── document_processor.py  # Document processing
-│   ├── document_tracker.py    # Document change tracking
-│   ├── incremental_vectorstore.py  # Vector database management
-│   ├── llm_manager.py   # LLM initialization and management
-│   ├── logger.py        # Logging system
-│   ├── models.py        # Data models
-│   ├── query_cache.py   # Query caching
-│   └── query_optimization.py  # Query classification and optimization
-├── release_notes/       # Version release notes and documentation
-├── run_direct.py        # Direct runner for the application
-├── main.py              # Main application with LLM
-├── run_server.py        # Lightweight server (vector search only)
-├── requirements.txt     # Python dependencies
-├── env.example          # Example environment variables
-├── Dockerfile           # Docker configuration
-└── README.md            # This file
->>>>>>> Stashed changes
+│   ├── test_document_processor.py # Document processing tests
+│   └── test_api_integration.py # API integration tests
+├── docker/                     # Docker configuration
+│   ├── Dockerfile              # Container definition
+│   └── docker-compose.yml      # Multi-container setup
+├── static/                     # Static web files
+├── models/                     # AI model files
+├── pyproject.toml              # Python project configuration
+├── setup.py                    # Package setup script
+├── requirements.txt            # Python dependencies (redirects to production)
+├── requirements/               # Organized requirements files
+│   ├── base.txt                # Base dependencies for all environments
+│   ├── production.txt          # Production dependencies
+│   ├── development.txt         # Development dependencies
+│   └── lightweight.txt         # Lightweight mode dependencies
+├── README.md                   # Project overview
+├── CHANGELOG.md                # Release history and changes
+├── LICENSE                     # License information
+├── .gitignore                  # Git ignore file
+└── run.sh                      # Shell script launcher
 ```
 
 ## Usage
+
+### Installation with pip
+
+MindNest can now be installed as a Python package:
+
+```bash
+# Install from local directory
+pip install -e .
+
+# Run using the package
+python -m mindnest.app
+```
 
 ### Adding Documentation
 
@@ -227,136 +227,61 @@ MindNest/
    - Supported formats: `.java`, `.groovy`, `.py`, `.js`, `.ts`, `.txt`, `.md`
    - Organize in subdirectories if desired
 
-<<<<<<< Updated upstream
-2. Start the server using one of the launcher options:
+2. Start the server:
    ```bash
-   # Standard launcher
-   python mindnest_launcher.py
+   # Using the package
+   python -m mindnest.app
    
    # Shell script (on Unix/Mac systems)
    ./run.sh start
-   
-   # Direct run
-   python run_direct.py
-   
-   # Docker container
-   ./run.sh docker:start
-=======
-2. Start the server:
-   ```bash
-   # Full mode with direct runner
-   python run_direct.py
-   
-   # Lightweight mode
-   python run_direct.py --lightweight
-   
-   # Specify port and host
-   python run_direct.py --port 8080 --host 127.0.0.1
-   
-   # Use lightweight model
-   python run_direct.py --lightweight-model
-   
-   # Don't open browser automatically
-   python run_direct.py --no-browser
->>>>>>> Stashed changes
    ```
 
-3. Access the web interface at `http://localhost:8000` (or port 8080 if using Docker)
+### Docker Deployment
 
-### Document Processing Tools
-
-For optimizing your documentation:
-
-1. **Document Cleanup**:
-   ```bash
-   python cleanup_docs.py [--directory docs]
-   ```
-   This removes duplicates and organizes content better.
-
-2. **Semantic Chunking**:
-   ```bash
-   python doc_chunker.py [--directory docs]
-   ```
-   This processes documents into semantically coherent chunks.
-
-### Querying Documentation
-
-The system handles different types of queries:
-
-1. **Document Queries**: Ask questions about your code and documentation
-   - Example: "How does the login system work?"
-
-2. **Concise Queries**: Request brief answers
-   - Example: "Briefly describe the authentication process"
-
-3. **Document Search**: Directly search for documents
-   - Example: "Find files related to authentication"
-
-## Configuration
-
-MindNest is highly configurable via environment variables or the `.env` file:
-
-- **Server Settings**: Host, port
-- **Vector Store Settings**: Storage directory, embedding model
-- **Document Processing**: Chunk size, overlap
-- **LLM Settings**: Model selection, temperature, context window
-- **Cache Settings**: Memory/disk cache configuration
-- **Query Settings**: Classifier mode, conversation style
-- **Logging Settings**: Log level, log file location
-
-See `env.example` for all available options.
-
-## AI Response Quality
-
-MindNest v1.1 includes several improvements for AI response accuracy:
-
-1. **Context Window Optimization**: 
-   - Small models: Prioritizes beginnings of documents
-   - Large models: Keeps balanced content from both beginning and end
-   - Prevents token limit overflows for more reliable responses
-
-2. **Model-Specific Processing**:
-   - Different prompt templates optimized for small or large models
-   - Adjusted document retrieval limits based on model capabilities
-   - Customized response formatting based on model strengths
-
-3. **Quality Control**:
-   - Validation checks for small model responses
-   - Fallback mechanisms for potentially low-quality outputs
-   - Confidence assessment for hybrid response generation
-   - Consistent formatting for better readability
-
-For a complete list of v1.1 improvements, see `release_notes/v1.1-release.md`.
-
-## Testing
-
-Run the test suite to verify functionality:
+Docker files have been moved to the `docker/` directory:
 
 ```bash
-python run_tests.py
+# Build and start using docker-compose
+docker-compose -f docker/docker-compose.yml up -d
+
+# Or use the helper script
+./run.sh docker:start
 ```
 
-Tests cover core functionality including:
-- Context window optimization for different model sizes
-- Configuration management
-- Document processing and chunking
-- Query classification and optimization
+## Development
 
-## Technical Details
+### Project Organization
 
-- Built with FastAPI for high-performance API endpoints
-- Uses LangChain for document processing and LLM integration
-- Supports multiple LLM models (tested with Llama family models)
-- Vector search with ChromaDB and HuggingFace embeddings
-- Optimized for incremental updates to avoid rebuilding the vector database
-- Multi-tiered caching system for improved response times
-- Model-aware processing pipeline for optimal results
+MindNest now follows standard Python package structure:
+- Code is organized in the `mindnest/` package
+- Configuration in `pyproject.toml` and `setup.py`
+- Development tools defined in `requirements-dev.txt`
 
-## Limitations
+### Running Tests
 
-- Best suited for codebases under 10,000 files
-- Response time depends on hardware and model size
-- Large language models require significant memory
+Tests are in the `tests/` directory and can be run with pytest:
+
+```bash
+# Install development dependencies
+pip install -r requirements-dev.txt
+
+# Run tests
+pytest
+```
+
+## Documentation
+
+Detailed documentation is available in the `docs/` directory:
+
+- **User Guides**: `docs/user_guides/`
+  - [Setup Guide](docs/user_guides/setup.md)
+  - [Docker Guide](docs/user_guides/docker_guide.md)
+  - [Usage Guide](docs/user_guides/usage.md)
+
+- **Feature Documentation**: `docs/features/`
+  - [Context Window Optimization](docs/features/context_window.md)
+  - [Query Processing](docs/features/query_processing.md)
+  - [Model Support](docs/features/model_support.md)
 
 ## License
 
