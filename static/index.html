@@ -408,32 +408,32 @@
                     <label class="settings-label">
                         <input type="checkbox" id="useSmallModel"> Use Faster Model
                     </label>
-                    <div class="settings-description">Switch to a smaller, faster model</div>
+                    <div class="settings-description">Switch to a smaller, faster model (requires restart)</div>
                 </div>
                 <div class="settings-item">
                     <label class="settings-label">Context Size</label>
                     <input type="range" id="contextSize" min="200" max="2000" step="100" value="800">
                     <div class="settings-value"><span id="contextSizeValue">800</span> tokens</div>
-                    <div class="settings-description">Lower values = faster responses</div>
+                    <div class="settings-description">Controls how much context is sent to the model (lower = faster)</div>
                 </div>
                 <div class="settings-item">
-                    <label class="settings-label">Conversation Mode</label>
+                    <label class="settings-label">Conversation Style</label>
                     <select id="conversationMode" class="settings-select">
                         <option value="professional">Professional</option>
                         <option value="passive_aggressive">Passive Aggressive</option>
                         <option value="humorous">Humorous</option>
                     </select>
-                    <div class="settings-description">How the assistant responds to casual conversation</div>
+                    <div class="settings-description">Affects style used for fallback responses</div>
                 </div>
                 <div class="settings-item">
-                    <label class="settings-label">Query Classifier</label>
+                    <label class="settings-label">Query Classification</label>
                     <select id="queryClassifierMode" class="settings-select">
                         <option value="embeddings">Embeddings (Fastest)</option>
                         <option value="neural">Neural (Most Accurate)</option>
                         <option value="hybrid">Hybrid (Best Balance)</option>
                         <option value="regex">Legacy Regex (Fallback)</option>
                     </select>
-                    <div class="settings-description">How to distinguish conversation from document queries</div>
+                    <div class="settings-description">Method used to classify query intent</div>
                 </div>
                 <button id="applySettings" class="settings-button">Apply Settings</button>
                 <div id="settingsStatus" class="status"></div>

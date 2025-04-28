@@ -13,6 +13,21 @@ An intelligent documentation system that uses AI to understand and answer questi
 
 See the [full release notes](release_notes/v1.3-conversational-query-improvements.md) for details.
 
+## Configuration Options
+
+MindNest provides several settings to customize behavior:
+
+- **Model Selection**: Switch between standard (higher quality) and lightweight (faster) models
+- **Context Size**: Control how much context is sent to the language model (200-2000 tokens)
+- **Conversation Style**: Choose between Professional, Passive Aggressive, or Humorous styles for fallback responses
+- **Query Classification**: Select different methods to classify query intent:
+  - Embeddings: Fastest method using vector similarity
+  - Neural: Most accurate using a fine-tuned model
+  - Hybrid: Balanced approach combining multiple methods
+  - Regex: Legacy fallback using pattern matching
+
+Changes to models require restart, while other settings take effect immediately.
+
 ## Features
 
 - **Multi-Format Support**: Understands Java, Groovy, Python, JavaScript, TypeScript, and plain text documentation

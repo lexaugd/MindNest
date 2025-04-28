@@ -325,14 +325,16 @@ async def ask(request: Request):
                 
                 # Apply conversation mode styling if needed
                 if conversation_mode != "professional":
-                    # Get the styled prefix
-                    styled_prefix = get_conversation_response(
-                        mode=conversation_mode, 
-                        query=query
-                    ).split(".")[0] + ". "
+                    # Always apply the conversation mode to ensure consistent styling
+                    styled_prefix = ""
                     
-                    # Combine the styled prefix with the generated response if needed
-                    if not any(greeting in response for greeting in ["Hello!", "Hi!", "Hey!"]):
+                    if conversation_mode == "humorous":
+                        styled_prefix = "🤖 "
+                    elif conversation_mode == "passive_aggressive":
+                        styled_prefix = "😒 "
+                        
+                    # Combine the styled prefix with the generated response if not already styled
+                    if not any(greeting in response for greeting in ["Hello!", "Hi!", "Hey!", "🤖", "😒"]):
                         response = styled_prefix + response
                 
                 return {"text": response, "sources": []}
