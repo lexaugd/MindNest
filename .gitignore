@@ -4,6 +4,7 @@ __pycache__/
 *$py.class
 *.so
 .Python
+env/
 build/
 develop-eggs/
 dist/
@@ -23,41 +24,45 @@ wheels/
 # Virtual Environment
 venv/
 venv_test/
-ENV/
-env/
+.env
 
-# IDE
+# IDE files
 .idea/
 .vscode/
 *.swp
 *.swo
 
-# Project specific
-chroma_db/
-models/
-.env
-utils/doc_tracking.json
-utils/query_cache.json
-mindnest/utils/doc_tracking.json
-mindnest/utils/query_cache.json
-doc_chunks/
-
-# Logs
+# Logs and databases
 *.log
-logs/
+*.sqlite3
+chroma_db/
 
-# mypy
-.mypy_cache/
-
-# pytest
-.pytest_cache/
-.coverage
-htmlcov/
-
-# Distribution
-dist/
-build/
-*.egg-info/ 
 # Runtime data
 cache/
 data/
+doc_chunks/
+
+# Legacy files
+fix_vectorstore.py
+assess_query_responses.py
+test_*.py
+!tests/test_*.py
+run_server.py
+utils/
+
+# Model files
+models/*.gguf
+models/*.bin
+models/*.ggml
+models/*.pt
+models/.cache/
+models/embeddings/
+models/**/*.gguf
+models/**/*.bin
+models/**/*.ggml
+models/**/*.pt
+models/**/.cache/
+
+# Keep models directory but exclude model files
+!models/
+!models/.gitkeep
