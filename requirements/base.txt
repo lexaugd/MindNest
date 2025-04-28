@@ -1,0 +1,24 @@
+# Base dependencies needed for all environments
+# Core server dependencies
+fastapi>=0.95.0
+uvicorn[standard]>=0.21.1
+pydantic>=1.10.7,<2.0.0
+pydantic-core==2.16.2
+
+# Ensure pydantic v1 compatibility with Python 3.12
+# Note: pydantic<2.0.0 handles v1 compatibility
+
+# Vector database
+chromadb>=0.4.6
+
+# Utility dependencies
+python-dotenv>=1.0.0
+loguru==0.7.2
+pyyaml==6.0.1
+
+# Web UI
+Jinja2>=3.1.2
+aiofiles==23.2.1
+
+# HTTP requests
+requests>=2.28.2 

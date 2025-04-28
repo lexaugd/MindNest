@@ -1,0 +1,21 @@
+# Production dependencies
+# Inherit base dependencies
+-r base.txt
+
+# LangChain dependencies
+langchain>=0.0.200
+langchain-community>=0.0.5
+langchain-huggingface>=0.0.1
+llama-cpp-python>=0.1.77
+
+# Embedding models
+sentence-transformers>=2.2.2
+
+# Tokenization and document processing
+tiktoken>=0.4.0
+huggingface-hub>=0.17.0
+
+# ML dependencies
+numpy>=1.24.2
+transformers>=4.28.1
+torch>=2.0.0 
