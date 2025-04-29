@@ -336,5 +336,6 @@ Detailed documentation is available in the `docs/` directory:
 - [HuggingFace](https://huggingface.co/) for embedding models and transformers
 
 <!-- Screenshots removed until we have proper screenshots -->
+![image](https://github.com/user-attachments/assets/f8ff2f95-4bbf-4689-a202-2e6f2c95cff9)
 
 
